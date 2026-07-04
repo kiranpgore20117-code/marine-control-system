@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCEANIC GUARDIAN | Tactical Mission Control</title>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #1e293b;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #38bdf8;
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+        .status-badge {
+            background-color: #059669;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .card {
+            background-color: #111827;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        h2 {
+            color: #f1f5f9;
+            margin-top: 0;
+            font-size: 18px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+        }
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+            font-size: 15px;
+        }
+        .label { color: #94a3b8; }
+        .value { font-weight: 600; color: #f8fafc; }
+        .terminal {
+            background-color: #020617;
+            border: 1px solid #334155;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 15px;
+            border-radius: 6px;
+            height: 150px;
+            overflow-y: auto;
+            grid-column: span 2;
+            color: #4ade80;
+        }
+        .severity-safe { color: #4ade80; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>OCEANIC GUARDIAN</h1>
+            <div style="color: #64748b; font-size: 12px; margin-top: 4px;">MESH NETWORK RECONNAISSANCE SYSTEM</div>
+        </div>
+        <div class="status-badge">🟢 NETWORK LIVE</div>
+    </header>
+
+    <div class="grid-container">
+        <div class="card" id="vessel-1">
+            <h2>🚢 VESSEL 01 STATUS</h2>
+            <div class="data-row"><span class="label">Latitude:</span><span class="value" id="lat-1">13.0827 °N</span></div>
+            <div class="data-row"><span class="label">Longitude:</span><span class="value" id="lon-1">80.2707 °E</span></div>
+            <div class="data-row"><span class="label">Water Ingress Status:</span><span class="value" id="water-1">0 (NOMINAL)</span></div>
+            <div class="data-row"><span class="label">Tilt Angle:</span><span class="value" id="tilt-1">0.0°</span></div>
+            <div class="data-row"><span class="label">System Severity:</span><span class="value severity-safe" id="severity-1">SAFE</span></div>
+        </div>
+
+        <div class="card" id="vessel-2">
+            <h2>🚢 VESSEL 02 STATUS</h2>
+            <div class="data-row"><span class="label">Latitude:</span><span class="value" id="lat-2">13.0911 °N</span></div>
+            <div class="data-row"><span class="label">Longitude:</span><span class="value" id="lon-2">80.2822 °E</span></div>
+            <div class="data-row"><span class="label">Water Ingress Status:</span><span class="value" id="water-2">0 (NOMINAL)</span></div>
+            <div class="data-row"><span class="label">Tilt Angle:</span><span class="value" id="tilt-2">0.0°</span></div>
+            <div class="data-row"><span class="label">System Severity:</span><span class="value severity-safe" id="severity-2">SAFE</span></div>
+        </div>
+
+        <div class="terminal" id="log-terminal">
+            [SYSTEM INFO] Core interface running. Initializing WebSocket telemetry streams...<br>
+            [SYSTEM INFO] Telemetry feeds synced with public secure server gateway.
+        </div>
+    </div>
+
+    <script>
+        // Automatic WebSocket handshake protocol matching whatever secure URL you are using
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const socket = new WebSocket(wsProtocol + window.location.host);
+        const logs = document.getElementById('log-terminal');
+
+        function appendLog(text) {
+            const time = new Date().toLocaleTimeString();
+            logs.innerHTML += `<br>[${time}] ${text}`;
+            logs.scrollTop = logs.scrollHeight;
+        }
+
+        socket.onopen = () => appendLog('WebSocket data pipeline established successfully.');
+
+        socket.onmessage = (event) => {
+            const raw = JSON.parse(event.data);
+            
+            if (raw.type === 'SNAPSHOT' || raw.type === 'UPDATE') {
+                const datasets = raw.type === 'SNAPSHOT' ? raw.data : [raw.data];
+                
+                datasets.forEach(vessel => {
+                    const id = vessel.vessel_id;
+                    document.getElementById(`lat-${id}`).innerText = vessel.telemetry.lat + " °N";
+                    document.getElementById(`lon-${id}`).innerText = vessel.telemetry.lon + " °E";
+                    document.getElementById(`water-${id}`).innerText = vessel.telemetry.water === 1 ? "⚠️ FLUID DETECTED" : "0 (NOMINAL)";
+                    document.getElementById(`tilt-${id}`).innerText = vessel.telemetry.tilt + "°";
+                    
+                    const sevEl = document.getElementById(`severity-${id}`);
+                    sevEl.innerText = vessel.severity;
+                    if(vessel.severity !== 'SAFE') {
+                        sevEl.className = '';
+                        sevEl.style.color = '#ef4444';
+                    } else {
+                        sevEl.style.color = '#4ade80';
+                    }
+                    
+                    appendLog(`Processed telemetry frame from Node #0${id}`);
+                });
+            }
+        };
+    </script>
+</body>
+</html>
