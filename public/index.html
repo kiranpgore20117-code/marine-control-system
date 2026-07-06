@@ -6,14 +6,14 @@
     <title>OCEANIC GUARDIAN — RECON CONSOLE</title>
     <style>
         :root {
-            --bg-deep: #040811;
-            --panel-glass: rgba(8, 14, 27, 0.8);
+            --bg-deep: #030712;
+            --panel-glass: rgba(11, 19, 36, 0.75);
             --neon-cyan: #06b6d4;
             --neon-emerald: #10b981;
             --neon-rose: #f43f5e;
             --neon-amber: #f59e0b;
             --text-primary: #f8fafc;
-            --text-secondary: #475569;
+            --text-secondary: #64748b;
         }
 
         body {
@@ -29,7 +29,7 @@
             position: relative;
         }
 
-        /* 🌊 Dynamic Live Background Canvas Layer */
+        /* 🌊 Dynamic Glowing Background Canvas Layer */
         #waveCanvas {
             position: absolute;
             top: 0; left: 0;
@@ -48,26 +48,26 @@
             box-sizing: border-box;
         }
 
-        /* 🔒 AUTH VIEW */
+        /* 🔒 AUTH SECTION */
         .auth-container {
             background: var(--panel-glass);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(25px);
-            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
             padding: 45px 35px;
             width: 100%; max-width: 380px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             text-align: center;
             box-sizing: border-box;
         }
 
         .nautical-radar-logo {
-            width: 44px; height: 44px;
+            width: 42px; height: 42px;
             border: 2px solid var(--neon-cyan);
             border-radius: 50%; display: inline-flex;
             justify-content: center; align-items: center;
             box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
-            font-size: 20px; color: white; margin-bottom: 15px;
+            font-size: 18px; color: white; margin-bottom: 15px;
         }
 
         .auth-header h1 { font-size: 20px; font-weight: 800; letter-spacing: 2px; margin: 0 0 6px 0; }
@@ -83,7 +83,7 @@
             border: none; border-radius: 8px; color: white; font-weight: 700; cursor: pointer; text-transform: uppercase;
         }
 
-        /* 🚢 COMMAND OVERLAY BOARD */
+        /* 🚢 MAIN INTERFACE WRAPPER (Preserving narrow 2-column format) */
         .command-wrapper {
             display: none;
             width: 100%; max-width: 960px;
@@ -96,15 +96,15 @@
         }
 
         .header-brand-block { display: flex; align-items: center; gap: 14px; }
-        .panel-headline h1 { font-size: 22px; font-weight: 800; letter-spacing: 1px; margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .panel-headline h1 { font-size: 22px; font-weight: 800; letter-spacing: 1px; margin: 0; }
         .panel-headline p { color: var(--neon-cyan); margin: 3px 0 0 0; font-size: 10px; letter-spacing: 1.5px; font-weight: 600; }
         
         .active-session-badge {
-            background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.15);
-            color: var(--neon-emerald); padding: 6px 14px; border-radius: 30px; font-size: 11px; font-weight: 600; font-family: monospace;
+            background: rgba(6, 182, 212, 0.05); border: 1px solid rgba(6, 182, 212, 0.2);
+            color: var(--neon-cyan); padding: 6px 14px; border-radius: 30px; font-size: 11px; font-weight: 600; font-family: monospace;
         }
 
-        /* 📊 CARD WORKSPACE Layout */
+        /* 📊 ORIGINAL BLOCK CONFIGURATION */
         .grid-workspace {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -112,56 +112,55 @@
         }
 
         .cyber-card {
-            background: rgba(11, 18, 33, 0.7);
+            background: rgba(10, 17, 33, 0.75);
             border-radius: 20px;
-            padding: 30px;
+            padding: 28px;
             position: relative;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
-            gap: 22px;
-            backdrop-filter: blur(16px);
-            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+            gap: 15px;
+            backdrop-filter: blur(12px);
         }
 
         .card-meta-row { display: flex; align-items: center; gap: 14px; }
         .vessel-badge-icon {
-            width: 36px; height: 36px; border-radius: 50%;
+            width: 34px; height: 34px; border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
             background: rgba(6, 182, 212, 0.08); border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan); font-weight: 700; font-size: 14px;
+            color: var(--neon-cyan); font-weight: 700; font-size: 13px;
         }
 
-        .card-meta-row h2 { font-size: 19px; font-weight: 700; margin: 0; color: white; letter-spacing: 0.5px; }
+        .card-meta-row h2 { font-size: 18px; font-weight: 700; margin: 0; color: white; letter-spacing: 0.5px; }
 
-        .telemetry-metrics-subgrid { display: flex; flex-direction: column; gap: 14px; }
+        .telemetry-metrics-subgrid { display: flex; flex-direction: column; gap: 12px; }
 
         .data-telemetry-slot {
-            background: rgba(4, 7, 15, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            border-radius: 12px; padding: 14px 18px;
+            background: rgba(5, 9, 19, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 10px; padding: 12px 16px;
             display: flex; justify-content: space-between; align-items: center;
         }
 
         .slot-left { display: flex; flex-direction: column; }
-        .slot-meta { font-size: 10px; color: #57657a; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 1px; }
-        .slot-reading { font-size: 16px; font-weight: 700; color: #f1f5f9; }
-        .slot-icon { font-size: 16px; color: var(--neon-cyan); opacity: 0.4; }
+        .slot-meta { font-size: 10px; color: #475569; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .slot-reading { font-size: 15px; font-weight: 700; color: #f1f5f9; }
+        .slot-icon { font-size: 15px; color: var(--neon-cyan); opacity: 0.35; }
 
         .criticality-assessment-banner {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.03);
-            padding: 14px 18px; border-radius: 12px;
+            padding: 12px 16px; border-radius: 10px;
             display: flex; justify-content: space-between; align-items: center;
-            font-size: 13px;
+            font-size: 12.5px;
         }
 
         /* 💻 LOG WINDOW */
         .terminal-log-deck {
-            background: rgba(4, 7, 13, 0.85);
+            background: rgba(4, 7, 13, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 12px; padding: 15px 20px;
+            border-radius: 10px; padding: 14px 18px;
             font-family: monospace; font-size: 11px;
         }
         .terminal-stream-node { color: #10b981; opacity: 0.8; }
@@ -169,11 +168,9 @@
 </head>
 <body>
 
-    <!-- 🌊 Asli Dynamic Animated Vector Canvas -->
     <canvas id="waveCanvas"></canvas>
 
     <div class="app-node-layer">
-        <!-- 🔒 AUTH VIEW -->
         <div class="auth-container" id="panel-auth-view">
             <div class="nautical-radar-logo">⚓</div>
             <div class="auth-header">
@@ -191,7 +188,6 @@
             <button class="auth-trigger-btn" onclick="authorizeOperatorSession()">Verify Identity</button>
         </div>
 
-        <!-- 🚢 CONTROL DASHBOARD -->
         <div class="command-wrapper" id="panel-dashboard-view">
             <div class="panel-header">
                 <div class="header-brand-block">
@@ -205,7 +201,6 @@
             </div>
 
             <div class="grid-workspace">
-                <!-- VESSEL 01 -->
                 <div class="cyber-card" id="v1-hull-card">
                     <div class="card-meta-row">
                         <div class="vessel-badge-icon" id="v1-badge">01</div>
@@ -235,7 +230,6 @@
                     </div>
                 </div>
 
-                <!-- VESSEL 02 -->
                 <div class="cyber-card" id="v2-hull-card">
                     <div class="card-meta-row">
                         <div class="vessel-badge-icon" id="v2-badge">02</div>
@@ -268,14 +262,14 @@
 
             <div class="terminal-log-deck">
                 <div class="terminal-stream-node" id="terminal-stream-node">
-                    [SYSTEM] Terminal synchronization operational. Tracking grid vectors.
+                    [SYSTEM] Dynamic data tracking matrix calibrated.
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 🌌 Real-time Diagonal Vector Wave Animation Code
+        // 🌌 Re-engineered Clear Vector Wave Animation Loop
         const canvas = document.getElementById('waveCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -289,21 +283,23 @@
         let count = 0;
         function drawWaves() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            count += 0.008;
+            count += 0.006; // Smooth flowing velocity
 
-            // Generate multiple organic lines moving together like Cleaorma
-            for (let i = 0; i < 12; i++) {
+            // Drawing 14 overlapping high-intensity vector lines
+            for (let i = 0; i < 14; i++) {
                 ctx.beginPath();
-                ctx.lineWidth = i === 5 ? 1.5 : 0.6; // Create depth with thin and ultra-thin lines
                 
-                // Color mapping: Soft organic teal lines with subtle opacity differences
-                ctx.strokeStyle = `rgba(6, 182, 212, ${0.03 + (i * 0.008)})`;
+                // Boldness adjustment: mid lines are crisp and thick
+                ctx.lineWidth = i % 3 === 0 ? 1.8 : 0.9;
+                
+                // Boosted neon-cyan intensity with high baseline alpha visibility
+                ctx.strokeStyle = `rgba(6, 182, 212, ${0.12 + (i * 0.015)})`;
 
-                for (let x = 0; x < canvas.width; x += 10) {
-                    // Complex sine wave equation to mimic high-end diagonal architectural flows
-                    const dynamicY = (canvas.height * 0.65) - (x * 0.35) + 
-                                     Math.sin(x * 0.004 + count + i * 0.2) * 45 + 
-                                     Math.cos(x * 0.001 - count + i * 0.1) * 25;
+                for (let x = 0; x < canvas.width; x += 8) {
+                    // Optimized equation to shift diagonal angle & keep wave clearly visible on dark background
+                    const dynamicY = (canvas.height * 0.6) - (x * 0.28) + 
+                                     Math.sin(x * 0.005 + count + i * 0.25) * 55 + 
+                                     Math.cos(x * 0.002 - count + i * 0.12) * 30;
                     
                     if (x === 0) ctx.moveTo(x, dynamicY);
                     else ctx.lineTo(x, dynamicY);
@@ -314,7 +310,7 @@
         }
         drawWaves();
 
-        // 🚢 APP DRIVER CODE
+        // 🚢 APP DRIVER PIPELINE
         const authView = document.getElementById('panel-auth-view');
         const dashboardView = document.getElementById('panel-dashboard-view');
         const logTerminal = document.getElementById('terminal-stream-node');
@@ -350,10 +346,10 @@
                     const ledger = await response.json();
                     if (ledger["1"]) renderNodeTelemetryData("1", ledger["1"]);
                     if (ledger["2"]) renderNodeTelemetryData("2", ledger["2"]);
-                    logTerminal.innerHTML = `[${new Date().toLocaleTimeString()}] Live matrix mesh feeds reading active...`;
+                    logTerminal.innerHTML = `[${new Date().toLocaleTimeString()}] Live grid tracking matrix nominal.`;
                 }
             } catch (err) {
-                logTerminal.innerHTML = `[ERROR] Telemetry extraction link interrupted.`;
+                logTerminal.innerHTML = `[ERROR] Telemetry pipeline tracking lost. Intercepting fallback links...`;
             }
         }
 
@@ -382,8 +378,8 @@
             badge.style.borderColor = targetColor;
             badge.style.color = targetColor;
             
-            card.style.borderColor = targetColor === "var(--neon-cyan)" ? "rgba(255,255,255,0.04)" : targetColor;
-            card.style.boxShadow = targetColor === "var(--neon-cyan)" ? "0 25px 50px rgba(0, 0, 0, 0.4)" : `0 0 30px ${targetColor}22`;
+            card.style.borderColor = targetColor === "var(--neon-cyan)" ? "rgba(255,255,255,0.05)" : targetColor;
+            card.style.boxShadow = targetColor === "var(--neon-cyan)" ? "0 20px 40px rgba(0, 0, 0, 0.5)" : `0 0 25px ${targetColor}22`;
         }
     </script>
 </body>
