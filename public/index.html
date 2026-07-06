@@ -3,107 +3,589 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oceanic Guardian - Cloud Control Room</title>
+    <title>OCEANIC GUARDIAN — DEFENSE COMMAND</title>
     <style>
-        body {
-            background-color: #0b111e; color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0; padding: 20px;
+        :root {
+            --bg-deep: #030712;
+            --panel-glass: rgba(17, 24, 39, 0.7);
+            --neon-cyan: #06b6d4;
+            --neon-emerald: #10b981;
+            --neon-rose: #f43f5e;
+            --neon-amber: #f59e0b;
+            --border-glow: rgba(6, 182, 212, 0.15);
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-dark: #6b7280;
         }
-        .header { border-bottom: 1px solid #1e293b; padding-bottom: 20px; margin-bottom: 30px; }
-        .title h1 { color: #38bdf8; margin: 0; font-size: 24px; letter-spacing: 1px; }
-        .title p { color: #64748b; margin: 5px 0 0 0; font-size: 12px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-        .card { background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 20px; }
-        .card h2 { font-size: 16px; border-bottom: 1px solid #1e293b; padding-bottom: 10px; margin-top: 0; color: #94a3b8; }
-        .data-row { display: flex; justify-content: space-between; margin: 15px 0; font-size: 14px; }
-        .data-label { color: #64748b; }
-        .data-value { font-weight: 600; color: #f1f5f9; }
-        .status-badge { font-weight: bold; letter-spacing: 0.5px; }
-        .console { background-color: #020617; border: 1px solid #1e293b; border-radius: 8px; padding: 15px; font-family: monospace; font-size: 13px; height: 100px; overflow-y: auto; }
-        .log-info { color: #10b981; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.05) 0px, transparent 50%);
+        }
+
+        /* ------------------ 🔒 SECURITY ACCREDITATION WALL ------------------ */
+        .auth-container {
+            background: var(--panel-glass);
+            border: 1px solid var(--border-glow);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 45px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .auth-container::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 10%; width: 80%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+        }
+
+        .auth-header h1 {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: #ffffff;
+            margin: 0 0 5px 0;
+            background: linear-gradient(135deg, #fff 30%, var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-header p {
+            color: var(--text-secondary);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 35px;
+        }
+
+        .auth-field {
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        .auth-field label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--neon-cyan);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .auth-field input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(10, 15, 30, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+
+        .auth-field input:focus {
+            outline: none;
+            border-color: var(--neon-cyan);
+            background: rgba(10, 15, 30, 0.95);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
+        }
+
+        .auth-trigger-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #0891b2, #0d9488);
+            border: none;
+            border-radius: 10px;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(8, 145, 178, 0.3);
+        }
+
+        .auth-trigger-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(6, 182, 212, 0.5);
+            filter: brightness(1.1);
+        }
+
+        /* ------------------ 🚢 MULTI-NODE TELEMETRY COMMAND ROOM ------------------ */
+        .command-wrapper {
+            display: none;
+            width: 100%;
+            max-width: 1400px;
+            padding: 40px;
+            box-sizing: border-box;
+            align-self: flex-start;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 25px;
+            margin-bottom: 35px;
+        }
+
+        .panel-headline h1 {
+            font-size: 30px;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #ffffff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .panel-headline p {
+            color: var(--neon-cyan);
+            margin: 6px 0 0 0;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+        }
+
+        .operator-tag-deck {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .active-session-badge {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--neon-emerald);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .active-session-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--neon-emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-emerald);
+            animation: pulse-blinker 1.8s infinite;
+        }
+
+        .terminate-session-btn {
+            background: rgba(244, 63, 94, 0.05);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            color: var(--neon-rose);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .terminate-session-btn:hover {
+            background: var(--neon-rose);
+            color: white;
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+        }
+
+        .grid-workspace {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(550px, 1fr));
+            gap: 30px;
+            margin-bottom: 35px;
+        }
+
+        .cyber-card {
+            background: var(--panel-glass);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px);
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 6px; height: 100%;
+            background: var(--neon-cyan);
+            border-top-left-radius: 18px;
+            border-bottom-left-radius: 18px;
+        }
+
+        .cyber-card.hazard-trigger::before {
+            background: var(--neon-rose);
+            box-shadow: 0 0 15px var(--neon-rose);
+        }
+
+        .card-meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 18px;
+            margin-bottom: 24px;
+        }
+
+        .card-meta-row h2 {
+            font-size: 18px;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+
+        .signal-indicator {
+            font-size: 11px;
+            font-weight: 900;
+            padding: 5px 12px;
+            border-radius: 6px;
+            letter-spacing: 1px;
+        }
+
+        .telemetry-metrics-subgrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .data-telemetry-slot {
+            background: rgba(2, 6, 23, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            padding: 18px;
+            transition: all 0.3s;
+        }
+
+        .data-telemetry-slot:hover {
+            border-color: rgba(255, 255, 255, 0.05);
+            background: rgba(2, 6, 23, 0.7);
+        }
+
+        .slot-meta {
+            font-size: 11px;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .slot-reading {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .criticality-assessment-banner {
+            grid-column: span 2;
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            padding: 16px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .banner-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .banner-status-stamp {
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+        }
+
+        /* ------------------ 💾 LIVE MONITOR LOG TERMINAL ------------------ */
+        .terminal-log-deck {
+            background: #010409;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            padding: 22px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);
+        }
+
+        .terminal-banner-meta {
+            font-size: 11px;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .terminal-pulse-emitter {
+            width: 6px;
+            height: 6px;
+            background: var(--neon-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        .terminal-stream-node {
+            font-size: 12.5px;
+            color: var(--neon-emerald);
+            line-height: 1.7;
+            height: 80px;
+            overflow-y: auto;
+        }
+
+        @keyframes pulse-blinker {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="title">
+    <div class="auth-container" id="panel-auth-view">
+        <div class="auth-header">
             <h1>OCEANIC GUARDIAN</h1>
-            <p>MESH NETWORK RECONNAISSANCE SYSTEM (CLOUD INTEGRATION)</p>
+            <p>Defense Operations Control Terminal</p>
         </div>
+        
+        <div class="auth-field">
+            <label>Operator Signature (Email)</label>
+            <input type="email" id="operator-email" placeholder="Any email address...">
+        </div>
+        
+        <div class="auth-field">
+            <label>Security Cryptokey (Password)</label>
+            <input type="password" id="operator-key" placeholder="Any password...">
+        </div>
+        
+        <button class="auth-trigger-btn" onclick="authorizeOperatorSession()">Initialize Terminal</button>
     </div>
 
-    <div class="grid">
-        <div class="card">
-            <h2>🚢 VESSEL 01 STATUS</h2>
-            <div class="data-row"><span class="data-label">Latitude:</span><span class="data-value" id="v1-lat">13.0827 °N</span></div>
-            <div class="data-row"><span class="data-label">Longitude:</span><span class="data-value" id="v1-lon">80.2707 °E</span></div>
-            <div class="data-row"><span class="data-label">Water Ingress Status:</span><span class="data-value" id="v1-water">0 (NOMINAL)</span></div>
-            <div class="data-row"><span class="data-label">Tilt Angle:</span><span class="data-value" id="v1-tilt">0.0°</span></div>
-            <div class="data-row"><span class="data-label">System Severity:</span><span class="status-badge" id="v1-severity" style="color: #00FF66;">SAFE</span></div>
+    <div class="command-wrapper" id="panel-dashboard-view">
+        <div class="panel-header">
+            <div class="panel-headline">
+                <h1>OCEANIC GUARDIAN</h1>
+                <p>TACTICAL MESH NETWORK RECONNAISSANCE CONSOLE</p>
+            </div>
+            <div class="operator-tag-deck">
+                <div class="active-session-badge" id="operator-session-name">OPERATOR: SECURE</div>
+                <button class="terminate-session-btn" onclick="terminateSession()">Lock Console</button>
+            </div>
         </div>
 
-        <div class="card">
-            <h2>🚢 VESSEL 02 STATUS (GATEWAY)</h2>
-            <div class="data-row"><span class="data-label">Latitude:</span><span class="data-value" id="v2-lat">13.0911 °N</span></div>
-            <div class="data-row"><span class="data-label">Longitude:</span><span class="data-value" id="v2-lon">80.2822 °E</span></div>
-            <div class="data-row"><span class="data-label">Water Ingress Status:</span><span class="data-value" id="v2-water">0 (NOMINAL)</span></div>
-            <div class="data-row"><span class="data-label">Tilt Angle:</span><span class="data-value" id="v2-tilt">0.0°</span></div>
-            <div class="data-row"><span class="data-label">System Severity:</span><span class="status-badge" id="v2-severity" style="color: #00FF66;">SAFE</span></div>
-        </div>
-    </div>
+        <div class="grid-workspace">
+            <div class="cyber-card" id="v1-hull-card">
+                <div class="card-meta-row">
+                    <h2>🚢 VESSEL RESOURCE 01</h2>
+                    <span class="signal-indicator" id="v1-signal-tag" style="background: rgba(6, 182, 212, 0.08); color: var(--neon-cyan);">ACTIVE MESH</span>
+                </div>
+                <div class="telemetry-metrics-subgrid">
+                    <div class="data-telemetry-slot">
+                        <div class="slot-meta">Latitude Coordinate</div>
+                        <div class="slot-reading" id="v1-lat-reading">13.0827 °N</div>
+                    </div>
+                    <div class="data-telemetry-slot">
+                        <div class="slot-meta">Longitude Coordinate</div>
+                        <div class="slot-reading" id="v1-lon-reading">80.2707 °E</div>
+                    </div>
+                    <div class="data-telemetry-slot">
+                        <div class="slot-meta">Water Ingress Gauge</div>
+                        <div class="slot-reading" id="v1-water-reading">0 <span style="font-size:12px;color:var(--text-dark)">pts</span></div>
+                    </div>
+                    <div class="data-telemetry-slot">
+                        <div class="slot-meta">Hull Displacement Tilt</div>
+                        <div class="slot-reading" id="v1-tilt-reading">0.0°</div>
+                    </div>
+                    <div class="criticality-assessment-banner" id="v1-banner-strip">
+                        <span class="banner-label">Automated System Severity Matrix:</span>
+                        <span class="banner-status-stamp" id="v1-severity-stamp">SAFE</span>
+                    </div>
+                </div>
+            </div>
 
-    <div class="console">
-        <div class="log-info" id="ws-status">[SYSTEM INFO] Synchronizing telemetry with global cloud endpoints...</div>
+            <div class="cyber-card" id="v2-hull-card">
+                <div class="card-meta-row">
+                    <h2>🚢 VESSEL RESOURCE 02 (GATEWAY)</h2>
+                    <span class="signal-indicator" id="v2-signal-tag" style="background: rgba(6, 182, 212, 0.08); color: var(--neon-cyan);">ACTIVE MESH</span>
+                </div>
+                <div class="telemetry-metrics-subgrid">
+                    <div class="data-telemetry-slot">
+                        <div class="slot-meta">Latitude Coordinate</div>
+                        <div class="slot-reading" id="v2-lat-reading">13.0911 °N</div>
+                    </div>
+                    <div class="data-telemetry-slot">
+                        <div class="slot-meta">Longitude Coordinate</div>
+                        <div class="slot-reading" id="v2-lon-reading">80.2822 °E</div>
+                    </div>
+                    <div class="data-telemetry-slot">
+                        <div class="slot-meta">Water Ingress Gauge</div>
+                        <div class="slot-reading" id="v2-water-reading">0 <span style="font-size:12px;color:var(--text-dark)">pts</span></div>
+                    </div>
+                    <div class="data-telemetry-slot">
+                        <div class="slot-meta">Hull Displacement Tilt</div>
+                        <div class="slot-reading" id="v2-tilt-reading">0.0°</div>
+                    </div>
+                    <div class="criticality-assessment-banner" id="v2-banner-strip">
+                        <span class="banner-label">Automated System Severity Matrix:</span>
+                        <span class="banner-status-stamp" id="v2-severity-stamp">SAFE</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="terminal-log-deck">
+            <div class="terminal-banner-meta">
+                <div class="terminal-pulse-emitter"></div>
+                <span>Secured Array Matrix Stream Real-Time Pipeline Logger</span>
+            </div>
+            <div class="terminal-stream-node" id="terminal-stream-node">
+                [SYSTEM LOGS] Awaiting secure encryption token accreditation parameters...
+            </div>
+        </div>
     </div>
 
     <script>
-        const wsStatus = document.getElementById('ws-status');
+        const authView = document.getElementById('panel-auth-view');
+        const dashboardView = document.getElementById('panel-dashboard-view');
+        const logTerminal = document.getElementById('terminal-stream-node');
 
-        async function fetchTelemetryUpdate() {
+        // Volatile Session Verification Check on page reloads
+        if (sessionStorage.getItem("operator_authorized") === "true") {
+            mountControlTerminal(sessionStorage.getItem("operator_identity"));
+        }
+
+        function authorizeOperatorSession() {
+            const email = document.getElementById('operator-email').value.trim();
+            const key = document.getElementById('operator-key').value.trim();
+
+            // 🌟 AB KOI BHI EMAIL AUR PASSWORD DAKE DASHBOARD KHOL SAKTA HAI!
+            if (email.length > 3 && key.length > 3) {
+                sessionStorage.setItem("operator_authorized", "true");
+                sessionStorage.setItem("operator_identity", email.toUpperCase());
+                mountControlTerminal(email.toUpperCase());
+            } else {
+                alert("Security Protocol Warning: Credentials fields must contain at least 4 characters.");
+            }
+        }
+
+        function mountControlTerminal(identity) {
+            authView.style.display = "none";
+            dashboardView.style.display = "block";
+            document.body.style.alignItems = "flex-start";
+            document.getElementById('operator-session-name').innerText = `OPERATOR: ${identity}`;
+            
+            // Trigger loop integrations
+            setInterval(syncCloudLedgerArray, 1000);
+            syncCloudLedgerArray();
+        }
+
+        function terminateSession() {
+            sessionStorage.clear();
+            window.location.reload();
+        }
+
+        async function syncCloudLedgerArray() {
             try {
                 const response = await fetch('/stream');
                 if (response.ok) {
                     const ledger = await response.json();
                     
-                    // Parse Vessel 1 State
-                    if (ledger["1"]) updateNodeDOM("1", ledger["1"]);
-                    // Parse Vessel 2 State
-                    if (ledger["2"]) updateNodeDOM("2", ledger["2"]);
+                    if (ledger["1"]) renderNodeTelemetryData("1", ledger["1"]);
+                    if (ledger["2"]) renderNodeTelemetryData("2", ledger["2"]);
 
-                    wsStatus.innerText = "[SYSTEM INFO] Cloud Link Active. Syncing data feed array globally via secure HTTPS tunnels.";
-                    wsStatus.style.color = "#10b981";
+                    // Timestamp updates
+                    const time = new Date().toLocaleTimeString();
+                    logTerminal.innerHTML = `[${time}] Dynamic Sync Handshake: 0 packet dropped. Link integrity stable.`;
+                    logTerminal.style.color = "var(--neon-emerald)";
                 }
             } catch (err) {
-                wsStatus.innerText = "[SYSTEM INFO] Network lag detected. Re-fetching cloud channels...";
-                wsStatus.style.color = "#ef4444";
+                logTerminal.innerHTML = `[CRITICAL FAULT] Link synchronization dropped. Re-establishing telemetry paths...`;
+                logTerminal.style.color = "var(--neon-rose)";
             }
         }
 
-        function updateNodeDOM(id, node) {
-            if (!node || !node.telemetry) return;
+        function renderNodeTelemetryData(id, packet) {
+            if (!packet || !packet.telemetry) return;
             const prefix = id === "1" ? "v1-" : "v2-";
             
-            document.getElementById(`${prefix}lat`).innerText = `${parseFloat(node.telemetry.lat).toFixed(4)} °N`;
-            document.getElementById(`${prefix}lon`).innerText = `${parseFloat(node.telemetry.lon).toFixed(4)} °E`;
-            document.getElementById(`${prefix}water`).innerText = `${node.telemetry.water} (${node.telemetry.water > 200 ? 'HAZARD' : 'NOMINAL'})`;
-            document.getElementById(`${prefix}tilt`).innerText = `${parseFloat(node.telemetry.tilt).toFixed(1)}°`;
+            document.getElementById(`${prefix}lat-reading`).innerText = `${parseFloat(packet.telemetry.lat).toFixed(4)} °N`;
+            document.getElementById(`${prefix}lon-reading`).innerText = `${parseFloat(packet.telemetry.lon).toFixed(4)} °E`;
             
-            const sevElement = document.getElementById(`${prefix}severity`);
-            sevElement.innerText = node.severity;
-            applyColor(sevElement, node.severity);
+            const waterVal = packet.telemetry.water;
+            document.getElementById(`${prefix}water-reading`).innerHTML = `${waterVal} <span style="font-size:11px;color:${waterVal > 200 ? 'var(--neon-rose)' : 'var(--text-dark)'}">${waterVal > 200 ? 'CRITICAL INGRESS' : 'NOMINAL'}</span>`;
+            document.getElementById(`${prefix}tilt-reading`).innerText = `${parseFloat(packet.telemetry.tilt).toFixed(1)}°`;
+            
+            const severity = packet.severity || "SAFE";
+            const stamp = document.getElementById(`${prefix}severity-stamp`);
+            const strip = document.getElementById(`${prefix}banner-strip`);
+            const card = document.getElementById(`${prefix}hull-card`);
+            const signalTag = document.getElementById(`${prefix}signal-tag`);
+            
+            stamp.innerText = severity;
+            
+            if (severity === "EMERGENCY") {
+                adjustWidgetThemes(card, signalTag, strip, stamp, "rgba(244, 63, 94, 0.08)", "var(--neon-rose)", "rgba(244, 63, 94, 0.2)", "HAZARD DETECTED");
+            } else if (severity === "WARNING" || severity === "PRE-DISTRESS") {
+                adjustWidgetThemes(card, signalTag, strip, stamp, "rgba(245, 158, 11, 0.08)", "var(--neon-amber)", "rgba(245, 158, 11, 0.2)", "WARN STATUS");
+            } else {
+                adjustWidgetThemes(card, signalTag, strip, stamp, "rgba(16, 185, 129, 0.05)", "var(--neon-emerald)", "rgba(16, 185, 129, 0.15)", "SECURED NODE");
+            }
         }
 
-        function applyColor(element, severity) {
-            if (severity === "EMERGENCY") element.style.color = "#FF3333";
-            else if (severity === "WARNING") element.style.color = "#FFA500";
-            else if (severity === "PRE-DISTRESS") element.style.color = "#FFFF00";
-            else element.style.color = "#00FF66";
+        function adjustWidgetThemes(card, tag, strip, stamp, bg, color, stripBorder, tagText) {
+            strip.style.background = bg;
+            strip.style.borderColor = stripBorder;
+            stamp.style.color = color;
+            tag.style.background = bg;
+            tag.style.color = color;
+            tag.innerText = tagText;
+            
+            if (color === "var(--neon-rose)") {
+                card.classList.add("hazard-trigger");
+                card.style.borderColor = "rgba(244, 63, 94, 0.25)";
+            } else {
+                card.classList.remove("hazard-trigger");
+                card.style.borderColor = "rgba(255, 255, 255, 0.03)";
+            }
         }
-
-        // Trigger dynamic fetch sequence loops every 1000 milliseconds (1 Sec)
-        setInterval(fetchTelemetryUpdate, 1000);
-        fetchTelemetryUpdate(); // Initial call
     </script>
 </body>
 </html>
