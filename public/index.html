@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OCEANIC GUARDIAN — CONSOLE</title>
+    <title>OCEANIC GUARDIAN — RECON CONSOLE</title>
     <style>
         :root {
-            --bg-deep: #080d1a;
-            --panel-glass: rgba(17, 24, 39, 0.7);
+            --bg-deep: #060a13;
+            --panel-glass: rgba(13, 20, 35, 0.85);
             --neon-cyan: #06b6d4;
             --neon-emerald: #10b981;
             --neon-rose: #f43f5e;
             --neon-amber: #f59e0b;
             --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
+            --text-secondary: #64748b;
         }
 
         body {
@@ -26,210 +26,182 @@
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
-            position: relative;
         }
 
-        /* 🌌 Deep Ambient Subtle Animation Background */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 20% 30%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
-                        radial-gradient(circle at 80% 70%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
-            z-index: 1;
-        }
-
-        .app-node-layer {
-            position: relative;
-            z-index: 3;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-
-        /* 🔒 AUTH SCREEN */
+        /* 🔒 AUTH SECTION */
         .auth-container {
             background: var(--panel-glass);
             border: 1px solid rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 50px 40px;
-            width: 100%; max-width: 400px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 45px 35px;
+            width: 100%; max-width: 380px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             text-align: center;
             box-sizing: border-box;
         }
 
         .nautical-radar-logo {
-            width: 50px; height: 50px;
+            width: 46px; height: 46px;
             border: 2px solid var(--neon-cyan);
             border-radius: 50%; display: inline-flex;
             justify-content: center; align-items: center;
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
-            font-size: 24px; color: white; margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+            font-size: 20px; color: white; margin-bottom: 15px;
         }
 
-        .auth-header h1 { font-size: 22px; font-weight: 800; letter-spacing: 3px; margin: 0 0 8px 0; }
-        .auth-header p { color: var(--text-secondary); font-size: 11px; letter-spacing: 1px; margin-bottom: 30px; }
-        .auth-field { text-align: left; margin-bottom: 20px; }
+        .auth-header h1 { font-size: 20px; font-weight: 800; letter-spacing: 2px; margin: 0 0 6px 0; }
+        .auth-header p { color: var(--text-secondary); font-size: 11px; margin-bottom: 25px; }
+        .auth-field { text-align: left; margin-bottom: 18px; }
         .auth-field label { display: block; font-size: 11px; font-weight: 600; color: var(--neon-cyan); margin-bottom: 6px; text-transform: uppercase; }
         .auth-field input {
-            width: 100%; padding: 12px 16px; background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; color: white; font-size: 14px; box-sizing: border-box;
+            width: 100%; padding: 12px 14px; background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; color: white; font-size: 14px; box-sizing: border-box;
         }
-        .auth-field input:focus { outline: none; border-color: var(--neon-cyan); box-shadow: 0 0 10px rgba(6, 182, 212, 0.2); }
         .auth-trigger-btn {
-            width: 100%; padding: 14px; background: linear-gradient(135deg, #0891b2, #0d9488);
-            border: none; border-radius: 10px; color: white; font-weight: 700; letter-spacing: 1px; cursor: pointer; text-transform: uppercase;
+            width: 100%; padding: 13px; background: linear-gradient(135deg, #0891b2, #0d9488);
+            border: none; border-radius: 8px; color: white; font-weight: 700; cursor: pointer; text-transform: uppercase;
         }
 
-        /* 🚢 COMMAND DASHBOARD */
+        /* 🚢 MAIN DASHBOARD PANEL */
         .command-wrapper {
             display: none;
-            width: 100%; max-width: 1100px;
-            padding: 30px 20px; box-sizing: border-box;
+            width: 100%; max-width: 1150px;
+            padding: 40px 20px; box-sizing: border-box;
         }
 
         .panel-header {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 40px;
-        }
-        .panel-headline h1 { font-size: 24px; font-weight: 800; letter-spacing: 1px; margin: 0; }
-        .panel-headline p { color: var(--neon-cyan); margin: 4px 0 0 0; font-size: 11px; letter-spacing: 2px; font-weight: 600; }
-        .active-session-badge {
-            background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2);
-            color: var(--neon-emerald); padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700;
+            margin-bottom: 35px;
         }
 
-        /* 🎨 SCREENSHOT SPECIFIC ANIMATED CARDS WORKSPACE */
+        .header-brand-block {
+            display: flex; align-items: center; gap: 14px;
+        }
+
+        .panel-headline h1 { font-size: 22px; font-weight: 800; letter-spacing: 1px; margin: 0; }
+        .panel-headline p { color: var(--neon-cyan); margin: 3px 0 0 0; font-size: 10.5px; letter-spacing: 1.5px; font-weight: 600; }
+        
+        .active-session-badge {
+            background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.15);
+            color: var(--neon-emerald); padding: 6px 14px; border-radius: 30px; font-size: 11px; font-weight: 600;
+        }
+
+        /* 🎨 THE NEW CRUNCHY ANIMATED WORKSPACE */
         .grid-workspace {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 35px; margin-bottom: 35px;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px; margin-bottom: 30px;
         }
 
-        /* 🌟 Cleaorma Premium Metallic Gradient Card Look */
+        /* Pure Glassmorphic Premium Base */
         .cyber-card {
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
-            border-radius: 24px;
-            padding: 30px;
+            background: rgba(18, 26, 46, 0.5);
+            border-radius: 20px;
+            padding: 26px;
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(6, 182, 212, 0.15); /* Clean thin default border */
             display: flex;
             flex-direction: column;
             gap: 20px;
+            overflow: hidden;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
         }
 
-        /* Premium Dynamic Moving Light Sheen Background Element */
-        .cyber-card::before {
+        /* Smooth continuous gradient shift background inside the card */
+        .cyber-card::after {
             content: '';
             position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
-            transform: rotate(30deg);
-            animation: metallic-shimmer 8s linear infinite;
+            inset: 0;
+            background: linear-gradient(125deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.01) 40%, rgba(6,182,212,0.03) 50%, rgba(255,255,255,0) 60%);
+            background-size: 200% 200%;
+            animation: gradient-sheen 6s infinite ease-in-out;
             pointer-events: none;
+            z-index: 1;
         }
 
-        @keyframes metallic-shimmer {
-            0% { transform: translate(-30%, -30%) rotate(0deg); }
-            50% { transform: translate(10%, 10%) rotate(180deg); }
-            100% { transform: translate(-30%, -30%) rotate(360deg); }
+        @keyframes gradient-sheen {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* Glowing Accent Side-Border exactly like screenshot */
-        .card-glow-edge {
-            position: absolute;
-            top: 0; left: 0; bottom: 0; width: 4px;
-            background: var(--neon-cyan);
-            box-shadow: 0 0 15px var(--neon-cyan);
-            border-radius: 24px 0 0 24px;
-        }
-
-        /* Rounded Icon Header row */
         .card-meta-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            display: flex; align-items: center; gap: 12px; position: relative; z-index: 2;
         }
 
         .vessel-badge-icon {
-            width: 42px; height: 42px;
-            border-radius: 50%;
+            width: 32px; height: 32px; border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            background: var(--neon-cyan);
-            color: #000; font-weight: 900; font-size: 18px;
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+            background: rgba(6, 182, 212, 0.1); border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan); font-weight: 700; font-size: 13px;
         }
 
-        .card-meta-row h2 {
-            font-size: 20px; font-weight: 700; margin: 0; letter-spacing: 0.5px; color: white;
-        }
+        .card-meta-row h2 { font-size: 18px; font-weight: 700; margin: 0; color: white; letter-spacing: 0.5px; }
 
-        /* Simplified Metrics Grid */
         .telemetry-metrics-subgrid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 14px; position: relative; z-index: 2;
         }
 
         .data-telemetry-slot {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 14px; padding: 14px 16px;
+            background: rgba(6, 11, 23, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            border-radius: 12px; padding: 14px 16px;
         }
 
-        .slot-meta { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .slot-reading { font-size: 18px; font-weight: 700; color: white; }
+        .slot-meta { font-size: 10px; color: var(--text-secondary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .slot-reading { font-size: 17px; font-weight: 700; color: #f1f5f9; }
 
         .criticality-assessment-banner {
             grid-column: span 2;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.03);
             padding: 12px 16px; border-radius: 12px;
             display: flex; justify-content: space-between; align-items: center;
-            font-size: 13px; font-weight: 600;
+            font-size: 12.5px;
         }
 
-        /* 💻 TERMINAL OUTPUT LOG WINDOW */
+        /* 💻 LOG WINDOW */
         .terminal-log-deck {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 16px; padding: 18px;
+            background: rgba(4, 7, 13, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 14px; padding: 16px;
             font-family: monospace; font-size: 12px;
         }
-        .terminal-stream-node { color: var(--neon-emerald); height: 40px; overflow-y: auto; }
+        .terminal-stream-node { color: #10b981; }
     </style>
 </head>
 <body>
 
-    <div class="app-node-layer">
+    <div style="width: 100%; display: flex; justify-content: center;">
         <!-- 🔒 AUTH VIEW -->
         <div class="auth-container" id="panel-auth-view">
             <div class="nautical-radar-logo">⚓</div>
             <div class="auth-header">
                 <h1>OCEANIC GUARDIAN</h1>
-                <p>Telemetry Terminal Secure Access</p>
+                <p>Telemetry Terminal Interface Access</p>
             </div>
             <div class="auth-field">
-                <label>Workstation Email</label>
-                <input type="email" id="operator-email" placeholder="Enter identity email...">
+                <label>Workstation Identity</label>
+                <input type="email" id="operator-email" placeholder="Enter session signature...">
             </div>
             <div class="auth-field">
-                <label>Security Cryptokey</label>
-                <input type="password" id="operator-key" placeholder="Enter access credentials...">
+                <label>Security Key</label>
+                <input type="password" id="operator-key" placeholder="Enter override credentials...">
             </div>
-            <button class="auth-trigger-btn" onclick="authorizeOperatorSession()">Verify Access</button>
+            <button class="auth-trigger-btn" onclick="authorizeOperatorSession()">Verify Identity</button>
         </div>
 
-        <!-- 🚢 CONTROL ROOM DASHBOARD -->
+        <!-- 🚢 CONTROL DASHBOARD -->
         <div class="command-wrapper" id="panel-dashboard-view">
             <div class="panel-header">
-                <div class="panel-headline">
-                    <h1>OCEANIC GUARDIAN</h1>
-                    <p>TACTICAL MESH NETWORK DATA</p>
+                <div class="header-brand-block">
+                    <div class="nautical-radar-logo" style="margin-bottom:0; width:36px; height:36px; font-size:16px;">⚓</div>
+                    <div class="panel-headline">
+                        <h1>OCEANIC GUARDIAN</h1>
+                        <p>TACTICAL MESH NETWORK DATA</p>
+                    </div>
                 </div>
                 <div class="active-session-badge" id="operator-session-name">OPERATOR: SECURE</div>
             </div>
@@ -237,9 +209,8 @@
             <div class="grid-workspace">
                 <!-- VESSEL 01 -->
                 <div class="cyber-card" id="v1-hull-card">
-                    <div class="card-glow-edge" id="v1-glow-edge"></div>
                     <div class="card-meta-row">
-                        <div class="vessel-badge-icon" id="v1-badge">1</div>
+                        <div class="vessel-badge-icon" id="v1-badge">01</div>
                         <h2>VESSEL 01</h2>
                     </div>
                     <div class="telemetry-metrics-subgrid">
@@ -248,7 +219,7 @@
                         <div class="data-telemetry-slot"><div class="slot-meta">Water Ingress</div><div class="slot-reading" id="v1-water-reading">0 pts</div></div>
                         <div class="data-telemetry-slot"><div class="slot-meta">Tilt Angle</div><div class="slot-reading" id="v1-tilt-reading">0.0°</div></div>
                         <div class="criticality-assessment-banner">
-                            <span style="color: var(--text-secondary);">Status Assessment:</span>
+                            <span style="color: var(--text-secondary); font-weight: 500;">Status Assessment:</span>
                             <span id="v1-severity-stamp" style="font-weight: 800;">SAFE</span>
                         </div>
                     </div>
@@ -256,9 +227,8 @@
 
                 <!-- VESSEL 02 -->
                 <div class="cyber-card" id="v2-hull-card">
-                    <div class="card-glow-edge" id="v2-glow-edge"></div>
                     <div class="card-meta-row">
-                        <div class="vessel-badge-icon" id="v2-badge">2</div>
+                        <div class="vessel-badge-icon" id="v2-badge">02</div>
                         <h2>VESSEL 02</h2>
                     </div>
                     <div class="telemetry-metrics-subgrid">
@@ -267,7 +237,7 @@
                         <div class="data-telemetry-slot"><div class="slot-meta">Water Ingress</div><div class="slot-reading" id="v2-water-reading">0 pts</div></div>
                         <div class="data-telemetry-slot"><div class="slot-meta">Tilt Angle</div><div class="slot-reading" id="v2-tilt-reading">0.0°</div></div>
                         <div class="criticality-assessment-banner">
-                            <span style="color: var(--text-secondary);">Status Assessment:</span>
+                            <span style="color: var(--text-secondary); font-weight: 500;">Status Assessment:</span>
                             <span id="v2-severity-stamp" style="font-weight: 800;">SAFE</span>
                         </div>
                     </div>
@@ -276,7 +246,7 @@
 
             <div class="terminal-log-deck">
                 <div class="terminal-stream-node" id="terminal-stream-node">
-                    [SYSTEM] Terminal online. Waiting for network synchronization pipelines...
+                    [SYSTEM] Terminal synchronization operational.
                 </div>
             </div>
         </div>
@@ -299,7 +269,7 @@
                 sessionStorage.setItem("operator_identity", email.toUpperCase());
                 mountControlTerminal(email.toUpperCase());
             } else {
-                alert("Please provide valid security tokens.");
+                alert("Please fill validation credentials.");
             }
         }
 
@@ -318,12 +288,10 @@
                     const ledger = await response.json();
                     if (ledger["1"]) renderNodeTelemetryData("1", ledger["1"]);
                     if (ledger["2"]) renderNodeTelemetryData("2", ledger["2"]);
-                    logTerminal.innerHTML = `[${new Date().toLocaleTimeString()}] Telemetry buffer stream synchronized successfully.`;
-                    logTerminal.style.color = "var(--neon-emerald)";
+                    logTerminal.innerHTML = `[${new Date().toLocaleTimeString()}] Dynamic data streams nominal. No alert vectors found.`;
                 }
             } catch (err) {
-                logTerminal.innerHTML = `[ERROR] Connection error in stream synchronization loop.`;
-                logTerminal.style.color = "var(--neon-rose)";
+                logTerminal.innerHTML = `[ERROR] Pipeline tracking broke down. Intercepting sockets...`;
             }
         }
 
@@ -338,7 +306,7 @@
             
             const severity = packet.severity || "SAFE";
             const stamp = document.getElementById(`${prefix}severity-stamp`);
-            const edge = document.getElementById(`${prefix}glow-edge`);
+            const card = document.getElementById(`${prefix}hull-card`);
             const badge = document.getElementById(`${prefix}badge`);
             
             stamp.innerText = severity;
@@ -349,10 +317,12 @@
             else targetColor = "var(--neon-emerald)";
             
             stamp.style.color = targetColor;
-            edge.style.background = targetColor;
-            edge.style.boxShadow = `0 0 15px ${targetColor}`;
-            badge.style.background = targetColor;
-            badge.style.boxShadow = `0 0 15px ${targetColor}`;
+            badge.style.borderColor = targetColor;
+            badge.style.color = targetColor;
+            
+            // Dynamic border glow matching standard professional states
+            card.style.borderColor = targetColor === "var(--neon-cyan)" ? "rgba(6, 182, 212, 0.15)" : targetColor;
+            card.style.boxShadow = targetColor === "var(--neon-cyan)" ? "0 15px 35px rgba(0, 0, 0, 0.3)" : `0 0 20px ${targetColor}22`;
         }
     </script>
 </body>
