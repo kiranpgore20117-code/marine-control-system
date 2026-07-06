@@ -4,19 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OCEANIC GUARDIAN — RECON CONSOLE</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
     <style>
         :root {
             --bg-deep: #02050d;
-            --panel-glass: rgba(6, 11, 25, 0.7);
+            --panel-glass: rgba(6, 11, 25, 0.75);
             --card-glass: rgba(10, 19, 39, 0.5);
-            --neon-cyan: #22d3ee;       /* Ice Cyan */
-            --neon-emerald: #34d399;    /* Crisp Emerald */
-            --neon-rose: #f43f5e;       /* Warning Alert Rose */
-            --neon-amber: #fbbf24;      /* Cyber Amber */
+            --neon-cyan: #22d3ee;
+            --neon-emerald: #34d399;
+            --neon-rose: #f43f5e;
+            --neon-amber: #fbbf24;
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #475569;
@@ -25,7 +27,7 @@
         body {
             background-color: var(--bg-deep);
             color: var(--text-primary);
-            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
             margin: 0; padding: 0;
             min-height: 100vh;
             display: flex;
@@ -42,16 +44,18 @@
             width: 100%; height: 100%;
             z-index: 1;
             pointer-events: none;
-            opacity: 0.9;
+            opacity: 0.7;
         }
 
         .app-node-layer {
             position: relative;
             z-index: 5;
             width: 100%;
+            height: 100vh;
             display: flex;
             justify-content: center;
-            padding: 40px 20px;
+            align-items: center;
+            padding: 25px;
             box-sizing: border-box;
         }
 
@@ -63,9 +67,8 @@
             border-radius: 24px;
             padding: 50px 40px;
             width: 100%; max-width: 400px;
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8);
             text-align: center;
-            box-sizing: border-box;
         }
 
         .nautical-radar-logo {
@@ -75,124 +78,127 @@
             justify-content: center; align-items: center;
             background: rgba(34, 211, 238, 0.05);
             font-size: 18px; color: var(--neon-cyan); margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(34, 211, 238, 0.1);
         }
 
-        .auth-header h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin: 0 0 8px 0; color: #fff; }
+        .auth-header h1 { font-size: 24px; font-weight: 700; margin: 0 0 8px 0; }
         .auth-header p { color: var(--text-secondary); font-size: 13px; margin-bottom: 35px; }
         .auth-field { text-align: left; margin-bottom: 22px; }
-        .auth-field label { display: block; font-size: 11px; font-weight: 500; color: var(--neon-cyan); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-        
+        .auth-field label { display: block; font-size: 11px; font-weight: 500; color: var(--neon-cyan); margin-bottom: 8px; text-transform: uppercase; }
         .auth-field input {
             width: 100%; padding: 14px 16px; background: rgba(2, 4, 10, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; color: white; 
             font-family: 'JetBrains Mono', monospace; font-size: 14px; box-sizing: border-box;
-            transition: all 0.25s ease;
         }
-        .auth-field input:focus {
-            outline: none; border-color: var(--neon-cyan); background: rgba(2, 4, 10, 0.9);
-            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
-        }
-
         .auth-trigger-btn {
             width: 100%; padding: 14px; background: var(--neon-cyan);
-            border: none; border-radius: 10px; color: #02050d; font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700; font-size: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
-            transition: all 0.2s ease; margin-top: 10px;
+            border: none; border-radius: 10px; color: #02050d; font-weight: 700; cursor: pointer; text-transform: uppercase;
         }
-        .auth-trigger-btn:hover { background: #67e8f9; transform: translateY(-1px); }
 
-        /* 🚢 COMMAND OVERLAY BOARD */
+        /* 🚢 MAIN DASHBOARD CONTAINER (Widescreen Split Screen) */
         .command-wrapper {
             display: none;
-            width: 100%; max-width: 1040px;
+            width: 100%;
+            height: 100%;
+            max-width: 1600px;
             box-sizing: border-box;
         }
 
         .panel-header {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 35px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px;
+            height: 60px; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;
         }
 
-        .header-brand-block { display: flex; align-items: center; gap: 16px; }
-        .panel-headline h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; margin: 0; color: #fff; }
-        .panel-headline p { color: var(--neon-cyan); margin: 4px 0 0 0; font-size: 11px; letter-spacing: 2px; font-weight: 500; text-transform: uppercase; }
-        
+        .header-brand-block { display: flex; align-items: center; gap: 14px; }
+        .panel-headline h1 { font-size: 24px; font-weight: 700; margin: 0; color: #fff; }
+        .panel-headline p { color: var(--neon-cyan); margin: 2px 0 0 0; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; }
         .active-session-badge {
             background: rgba(34, 211, 238, 0.03); border: 1px solid rgba(34, 211, 238, 0.15);
-            color: var(--neon-cyan); padding: 8px 16px; border-radius: 8px; font-size: 11px; font-weight: 600; font-family: 'JetBrains Mono', monospace;
+            color: var(--neon-cyan); padding: 6px 14px; border-radius: 8px; font-size: 11px; font-family: 'JetBrains Mono', monospace;
         }
 
-        /* 📊 CARD GRID MATRIX */
-        .grid-workspace {
+        /* 🏢 2-Column Split Master Grid */
+        .split-dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 35px; margin-bottom: 35px;
+            grid-template-columns: 480px 1fr;
+            gap: 25px;
+            height: calc(100% - 80px);
+        }
+
+        /* Left Column: Stats & Data */
+        .left-telemetry-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 100%;
+            overflow-y: auto;
         }
 
         .cyber-card {
             background: var(--card-glass);
-            border-radius: 24px;
-            padding: 32px;
-            position: relative;
-            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.03);
+            border-radius: 18px; padding: 22px;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
+            display: flex; flex-direction: column; gap: 16px;
             backdrop-filter: blur(20px);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
         }
 
-        .card-meta-row { display: flex; justify-content: space-between; align-items: center; }
-        .card-title-group { display: flex; align-items: center; gap: 14px; }
-        
+        .card-title-group { display: flex; align-items: center; gap: 12px; }
         .vessel-badge-icon {
-            width: 32px; height: 32px; border-radius: 6px;
+            width: 28px; height: 28px; border-radius: 6px;
             display: flex; justify-content: center; align-items: center;
             background: rgba(34, 211, 238, 0.05); border: 1px solid rgba(34, 211, 238, 0.2);
-            color: var(--neon-cyan); font-weight: 600; font-size: 12px; font-family: 'JetBrains Mono', monospace;
+            color: var(--neon-cyan); font-weight: 600; font-size: 11px; font-family: 'JetBrains Mono', monospace;
         }
+        .card-title-group h2 { font-size: 17px; font-weight: 500; margin: 0; color: #f1f5f9; }
 
-        .card-title-group h2 { font-size: 20px; font-weight: 500; margin: 0; color: #f1f5f9; letter-spacing: -0.2px; }
-
-        .telemetry-metrics-subgrid { display: flex; flex-direction: column; gap: 12px; }
-
+        .telemetry-metrics-subgrid { display: flex; flex-direction: column; gap: 10px; }
         .data-telemetry-slot {
-            background: rgba(2, 5, 12, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 14px; padding: 14px 20px;
+            background: rgba(2, 5, 12, 0.45); border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 10px; padding: 10px 16px;
             display: flex; justify-content: space-between; align-items: center;
-            transition: all 0.2s ease;
         }
-        .data-telemetry-slot:hover { background: rgba(2, 5, 12, 0.7); border-color: rgba(34, 211, 238, 0.15); }
-
         .slot-left { display: flex; flex-direction: column; }
-        .slot-meta { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-        .slot-reading { font-size: 16px; font-weight: 600; color: #fff; font-family: 'JetBrains Mono', monospace; }
-        .slot-icon { font-size: 15px; color: var(--text-muted); transition: color 0.2s ease; }
-        .data-telemetry-slot:hover .slot-icon { color: var(--neon-cyan); }
+        .slot-meta { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 2px; }
+        .slot-reading { font-size: 14px; font-weight: 600; color: #fff; font-family: 'JetBrains Mono', monospace; }
+        .slot-icon { font-size: 14px; color: var(--text-muted); }
 
         .criticality-assessment-banner {
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            padding: 14px 20px; border-radius: 14px;
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 13px; margin-top: 4px;
+            background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 10px 16px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
         }
-        .assessment-label { color: var(--text-secondary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; font-size: 11px; }
-        .severity-stamp { font-weight: 700; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+        .severity-stamp { font-weight: 700; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
 
-        /* 💻 LOG WINDOW TERMINAL */
         .terminal-log-deck {
-            background: rgba(2, 4, 10, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(10px);
-            border-radius: 16px; padding: 16px 24px;
-            font-family: 'JetBrains Mono', monospace; font-size: 12px;
-            box-shadow: 0 20px 40px -15 rgba(0,0,0,0.5);
+            background: rgba(2, 4, 10, 0.8); border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 14px; padding: 14px 20px;
+            font-family: 'JetBrains Mono', monospace; font-size: 11px;
+            margin-top: auto; /* Push terminal to bottom */
         }
-        .terminal-stream-node { color: var(--neon-emerald); opacity: 0.9; line-height: 1.6; }
+
+        /* 🗺️ Right Column: Tactical Live Map View */
+        .map-visualization-wrapper {
+            position: relative;
+            background: rgba(4, 8, 19, 0.5);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            height: 100%;
+        }
+
+        #vesselLiveMap {
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        /* 🎨 Custom CSS to invert OpenStreetMap into an elite Cyber Dark Map */
+        .leaflet-container {
+            background: #030712 !important;
+        }
+        .leaflet-tile-layer {
+            filter: invert(100%) hue-rotate(180deg) saturate(60%) brightness(90%) contrast(95%);
+        }
     </style>
 </head>
 <body>
@@ -204,7 +210,7 @@
             <div class="nautical-radar-logo">⚓</div>
             <div class="auth-header">
                 <h1>OCEANIC GUARDIAN</h1>
-                <p>Telemetry Node Interface Override</p>
+                <p>Telemetry Tactical Command System</p>
             </div>
             <div class="auth-field">
                 <label>Operator Signature</label>
@@ -220,121 +226,117 @@
         <div class="command-wrapper" id="panel-dashboard-view">
             <div class="panel-header">
                 <div class="header-brand-block">
-                    <div class="nautical-radar-logo" style="margin-bottom:0; width:36px; height:36px; font-size:16px; border-radius: 8px;">⚓</div>
+                    <div class="nautical-radar-logo" style="margin-bottom:0; width:34px; height:34px; font-size:15px; border-radius: 6px;">⚓</div>
                     <div class="panel-headline">
                         <h1>Oceanic Guardian</h1>
-                        <p>Mesh Network Reconnaissance System</p>
+                        <p>Mesh Network Tactical Tracking Override</p>
                     </div>
                 </div>
-                <div class="active-session-badge" id="operator-session-name">SECURE NODE</div>
+                <div class="active-session-badge" id="operator-session-name">SECURE MATRIX NODE</div>
             </div>
 
-            <div class="grid-workspace">
-                <div class="cyber-card" id="v1-hull-card">
-                    <div class="card-meta-row">
-                        <div class="card-title-group">
-                            <div class="vessel-badge-icon" id="v1-badge">01</div>
-                            <h2>Vessel 01 Status</h2>
+            <div class="split-dashboard-grid">
+                
+                <div class="left-telemetry-panel">
+                    <div class="cyber-card" id="v1-hull-card">
+                        <div class="card-meta-row">
+                            <div class="card-title-group">
+                                <div class="vessel-badge-icon" id="v1-badge">01</div>
+                                <h2>Vessel 01 Telemetry</h2>
+                            </div>
+                        </div>
+                        <div class="telemetry-metrics-subgrid">
+                            <div class="data-telemetry-slot">
+                                <div class="slot-left"><span class="slot-meta">Latitude</span><span class="slot-reading" id="v1-lat-reading">Searching...</span></div>
+                                <span class="slot-icon">🌐</span>
+                            </div>
+                            <div class="data-telemetry-slot">
+                                <div class="slot-left"><span class="slot-meta">Longitude</span><span class="slot-reading" id="v1-lon-reading">Searching...</span></div>
+                                <span class="slot-icon">🧭</span>
+                            </div>
+                            <div class="data-telemetry-slot">
+                                <div class="slot-left"><span class="slot-meta">Water Ingress Status</span><span class="slot-reading" id="v1-water-reading">0 pts</span></div>
+                                <span class="slot-icon">💧</span>
+                            </div>
+                            <div class="data-telemetry-slot">
+                                <div class="slot-left"><span class="slot-meta">Tilt Angle</span><span class="slot-reading" id="v1-tilt-reading">0.0°</span></div>
+                                <span class="slot-icon">📐</span>
+                            </div>
+                            <div class="criticality-assessment-banner">
+                                <span style="font-size:11px; color:var(--text-secondary);">SEVERITY STATUS:</span>
+                                <span id="v1-severity-stamp" class="severity-stamp">SAFE</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="telemetry-metrics-subgrid">
-                        <div class="data-telemetry-slot">
-                            <div class="slot-left"><span class="slot-meta">Latitude</span><span class="slot-reading" id="v1-lat-reading">13.0827 °N</span></div>
-                            <span class="slot-icon">🌐</span>
+
+                    <div class="cyber-card" id="v2-hull-card">
+                        <div class="card-meta-row">
+                            <div class="card-title-group">
+                                <div class="vessel-badge-icon" id="v2-badge">02</div>
+                                <h2>Vessel 02 Telemetry</h2>
+                            </div>
                         </div>
-                        <div class="data-telemetry-slot">
-                            <div class="slot-left"><span class="slot-meta">Longitude</span><span class="slot-reading" id="v1-lon-reading">80.2707 °E</span></div>
-                            <span class="slot-icon">🧭</span>
+                        <div class="telemetry-metrics-subgrid">
+                            <div class="data-telemetry-slot">
+                                <div class="slot-left"><span class="slot-meta">Latitude</span><span class="slot-reading" id="v2-lat-reading">Searching...</span></div>
+                                <span class="slot-icon">🌐</span>
+                            </div>
+                            <div class="data-telemetry-slot">
+                                <div class="slot-left"><span class="slot-meta">Longitude</span><span class="slot-reading" id="v2-lon-reading">Searching...</span></div>
+                                <span class="slot-icon">🧭</span>
+                            </div>
+                            <div class="data-telemetry-slot">
+                                <div class="slot-left"><span class="slot-meta">Water Ingress Status</span><span class="slot-reading" id="v2-water-reading">0 pts</span></div>
+                                <span class="slot-icon">💧</span>
+                            </div>
+                            <div class="data-telemetry-slot">
+                                <div class="slot-left"><span class="slot-meta">Tilt Angle</span><span class="slot-reading" id="v2-tilt-reading">0.0°</span></div>
+                                <span class="slot-icon">📐</span>
+                            </div>
+                            <div class="criticality-assessment-banner">
+                                <span style="font-size:11px; color:var(--text-secondary);">SEVERITY STATUS:</span>
+                                <span id="v2-severity-stamp" class="severity-stamp">SAFE</span>
+                            </div>
                         </div>
-                        <div class="data-telemetry-slot">
-                            <div class="slot-left"><span class="slot-meta">Water Ingress Status</span><span class="slot-reading" id="v1-water-reading">0 pts</span></div>
-                            <span class="slot-icon">💧</span>
-                        </div>
-                        <div class="data-telemetry-slot">
-                            <div class="slot-left"><span class="slot-meta">Tilt Angle</span><span class="slot-reading" id="v1-tilt-reading">0.0°</span></div>
-                            <span class="slot-icon">📐</span>
-                        </div>
-                        <div class="criticality-assessment-banner">
-                            <span class="assessment-label">System Severity:</span>
-                            <span id="v1-severity-stamp" class="severity-stamp">SAFE</span>
+                    </div>
+
+                    <div class="terminal-log-deck">
+                        <div class="terminal-stream-node" id="terminal-stream-node">
+                            [SYSTEM READY] Awaiting node session override stream...
                         </div>
                     </div>
                 </div>
 
-                <div class="cyber-card" id="v2-hull-card">
-                    <div class="card-meta-row">
-                        <div class="card-title-group">
-                            <div class="vessel-badge-icon" id="v2-badge">02</div>
-                            <h2>Vessel 02 Status</h2>
-                        </div>
-                    </div>
-                    <div class="telemetry-metrics-subgrid">
-                        <div class="data-telemetry-slot">
-                            <div class="slot-left"><span class="slot-meta">Latitude</span><span class="slot-reading" id="v2-lat-reading">13.0911 °N</span></div>
-                            <span class="slot-icon">🌐</span>
-                        </div>
-                        <div class="data-telemetry-slot">
-                            <div class="slot-left"><span class="slot-meta">Longitude</span><span class="slot-reading" id="v2-lon-reading">80.2822 °E</span></div>
-                            <span class="slot-icon">🧭</span>
-                        </div>
-                        <div class="data-telemetry-slot">
-                            <div class="slot-left"><span class="slot-meta">Water Ingress Status</span><span class="slot-reading" id="v2-water-reading">0 pts</span></div>
-                            <span class="slot-icon">💧</span>
-                        </div>
-                        <div class="data-telemetry-slot">
-                            <div class="slot-left"><span class="slot-meta">Tilt Angle</span><span class="slot-reading" id="v2-tilt-reading">0.0°</span></div>
-                            <span class="slot-icon">📐</span>
-                        </div>
-                        <div class="criticality-assessment-banner">
-                            <span class="assessment-label">System Severity:</span>
-                            <span id="v2-severity-stamp" class="severity-stamp">SAFE</span>
-                        </div>
-                    </div>
+                <div class="map-visualization-wrapper">
+                    <div id="vesselLiveMap"></div>
                 </div>
-            </div>
 
-            <div class="terminal-log-deck">
-                <div class="terminal-stream-node" id="terminal-stream-node">
-                    [SYSTEM INFO] Core communication relay optimized. Synchronizing cloud ledger arrays.
-                </div>
             </div>
         </div>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
-        // 🌌 Premium Anti-Aliased Blended Fluid Waves
+        // 🌌 Premium Background Flow Animation
         const canvas = document.getElementById('waveCanvas');
         const ctx = canvas.getContext('2d');
-
         function resizeCanvas() {
-            canvas.width = window.innerWidth * window.devicePixelRatio;
-            canvas.height = window.innerHeight * window.devicePixelRatio;
-            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-            canvas.style.width = window.innerWidth + 'px';
-            canvas.style.height = window.innerHeight + 'px';
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
         let count = 0;
         function drawWaves() {
-            const w = window.innerWidth;
-            const h = window.innerHeight;
-            ctx.clearRect(0, 0, w, h);
-            count += 0.005; 
-
-            for (let i = 0; i < 15; i++) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            count += 0.003;
+            for (let i = 0; i < 10; i++) {
                 ctx.beginPath();
-                ctx.lineWidth = i % 4 === 0 ? 1.6 : 0.8;
-                ctx.strokeStyle = `rgba(34, 211, 238, ${0.1 + (i * 0.012)})`;
-
-                for (let x = 0; x <= w; x += 12) {
-                    const dynamicY = (h * 0.58) - (x * 0.22) + 
-                                     Math.sin(x * 0.003 + count + i * 0.3) * 60 + 
-                                     Math.cos(x * 0.001 - count + i * 0.15) * 35;
-                    
-                    if (x === 0) ctx.moveTo(x, dynamicY);
-                    else ctx.lineTo(x, dynamicY);
+                ctx.lineWidth = i % 3 === 0 ? 1.2 : 0.6;
+                ctx.strokeStyle = `rgba(34, 211, 238, ${0.06 + (i * 0.01)})`;
+                for (let x = 0; x <= canvas.width; x += 15) {
+                    const dynamicY = (canvas.height * 0.6) - (x * 0.2) + Math.sin(x * 0.003 + count + i * 0.35) * 50;
+                    if (x === 0) ctx.moveTo(x, dynamicY); else ctx.lineTo(x, dynamicY);
                 }
                 ctx.stroke();
             }
@@ -342,7 +344,41 @@
         }
         drawWaves();
 
-        // 🚢 REAL-TIME DRIVER CODE
+        // 🗺️ LEAFLET LIVE MAP TRACKING SETUP
+        let map, markerV1, markerV2;
+        
+        // Initial fallback map center (Chennai coordinates grid)
+        const initialLat = 13.0827, initialLon = 80.2707;
+
+        function initializeLiveTacticalMap() {
+            // Mounting Leaflet map instance
+            map = L.map('vesselLiveMap', {
+                zoomControl: false,
+                attributionControl: false
+            }).setView([initialLat, initialLon], 12);
+
+            // Adding high-performance open tile engine
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                className: 'leaflet-tile-layer' // Linked to CSS inversion matrix filter
+            }).addTo(map);
+
+            // Custom glowing pulsing markers for vessels
+            const v1Icon = L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="background:#22d3ee; width:12px; height:12px; border-radius:50%; box-shadow:0 0 15px #22d3ee; border:2px solid #fff;"></div>`
+            });
+            const v2Icon = L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="background:#34d399; width:12px; height:12px; border-radius:50%; box-shadow:0 0 15px #34d399; border:2px solid #fff;"></div>`
+            });
+
+            // Spawning live interactive marker arrays
+            markerV1 = L.marker([initialLat, initialLon], {icon: v1Icon}).addTo(map).bindPopup("<b style='color:#000;'>VESSEL 01 ACTIVE</b>");
+            markerV2 = L.marker([initialLat + 0.01, initialLon + 0.01], {icon: v2Icon}).addTo(map).bindPopup("<b style='color:#000;'>VESSEL 02 ACTIVE</b>");
+        }
+
+        // 🚢 APP AUTH PIPELINE
         const authView = document.getElementById('panel-auth-view');
         const dashboardView = document.getElementById('panel-dashboard-view');
         const logTerminal = document.getElementById('terminal-stream-node');
@@ -359,14 +395,18 @@
                 sessionStorage.setItem("operator_identity", email.toLowerCase());
                 mountControlTerminal(email.toLowerCase());
             } else {
-                alert("Authentication parameters invalid.");
+                alert("Authentication invalid.");
             }
         }
 
         function mountControlTerminal(identity) {
             authView.style.display = "none";
             dashboardView.style.display = "block";
-            document.getElementById('operator-session-name').innerText = `OPERATOR: ${identity}`;
+            document.getElementById('operator-session-name').innerText = `OPERATOR: ${identity.toUpperCase()}`;
+            
+            // Map trigger immediately upon decryption interface unlock
+            initializeLiveTacticalMap();
+            
             setInterval(syncCloudLedgerArray, 1000);
             syncCloudLedgerArray();
         }
@@ -378,10 +418,10 @@
                     const ledger = await response.json();
                     if (ledger["1"]) renderNodeTelemetryData("1", ledger["1"]);
                     if (ledger["2"]) renderNodeTelemetryData("2", ledger["2"]);
-                    logTerminal.innerHTML = `[${new Date().toLocaleTimeString()}] Feeds synchronization active. System operating within baseline margins.`;
+                    logTerminal.innerHTML = `[${new Date().toLocaleTimeString()}] Live grid mapping vectors active...`;
                 }
             } catch (err) {
-                logTerminal.innerHTML = `[CRITICAL] Data ledger socket dropped. Handshaking reconnect...`;
+                logTerminal.innerHTML = `[CRITICAL] Stream extraction link offline. Relinking...`;
             }
         }
 
@@ -389,30 +429,38 @@
             if (!packet || !packet.telemetry) return;
             const prefix = id === "1" ? "v1-" : "v2-";
             
-            document.getElementById(`${prefix}lat-reading`).innerText = `${parseFloat(packet.telemetry.lat).toFixed(4)} °N`;
-            document.getElementById(`${prefix}lon-reading`).innerText = `${parseFloat(packet.telemetry.lon).toFixed(4)} °E`;
+            const lat = parseFloat(packet.telemetry.lat);
+            const lon = parseFloat(packet.telemetry.lon);
+
+            document.getElementById(`${prefix}lat-reading`).innerText = `${lat.toFixed(4)} °N`;
+            document.getElementById(`${prefix}lon-reading`).innerText = `${lon.toFixed(4)} °E`;
             document.getElementById(`${prefix}water-reading`).innerText = `${packet.telemetry.water} pts`;
             document.getElementById(`${prefix}tilt-reading`).innerText = `${parseFloat(packet.telemetry.tilt).toFixed(1)}°`;
             
+            // 🗺️ REAL-TIME MARKER ENGINE UPDATE
+            if (!isNaN(lat) && !isNaN(lon) && lat !== 0 && lon !== 0) {
+                if (id === "1") {
+                    markerV1.setLatLng([lat, lon]);
+                } else if (id === "2") {
+                    markerV2.setLatLng([lat, lon]);
+                }
+            }
+
             const severity = packet.severity || "SAFE";
             const stamp = document.getElementById(`${prefix}severity-stamp`);
             const card = document.getElementById(`${prefix}hull-card`);
             
             stamp.innerText = severity;
-            
             let targetColor = "var(--neon-cyan)";
             if (severity === "EMERGENCY") targetColor = "var(--neon-rose)";
             else if (severity === "WARNING" || severity === "PRE-DISTRESS") targetColor = "var(--neon-amber)";
             else targetColor = "var(--neon-emerald)";
             
             stamp.style.color = targetColor;
-            
             if (severity !== "SAFE") {
                 card.style.borderColor = targetColor;
-                card.style.boxShadow = `0 30px 60px -20px ${targetColor}15, inset 0 1px 0 rgba(255,255,255,0.05)`;
             } else {
                 card.style.borderColor = "rgba(255, 255, 255, 0.05)";
-                card.style.boxShadow = "0 30px 60px -20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.03)";
             }
         }
     </script>
