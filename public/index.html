@@ -3,152 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OCEANIC GUARDIAN | Tactical Recon</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Oceanic Guardian - Control Room</title>
     <style>
-        body { background-color: #030712; color: #f3f4f6; font-family: sans-serif; }
-        .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(31, 41, 55, 0.7); }
+        body {
+            background-color: #0b111e;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .title h1 {
+            color: #38bdf8;
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+        .title p {
+            color: #64748b;
+            margin: 5px 0 0 0;
+            font-size: 12px;
+        }
+        .btn-connect {
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-connect:hover { background-color: #0369a1; }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .card {
+            background-color: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .card h2 {
+            font-size: 16px;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 10px;
+            margin-top: 0;
+            color: #94a3b8;
+        }
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .data-label { color: #64748b; }
+        .data-value { font-weight: 600; color: #f1f5f9; }
+        .status-badge {
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .console {
+            background-color: #020617;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 13px;
+            height: 120px;
+            overflow-y: auto;
+        }
+        .log-info { color: #10b981; margin: 4px 0; }
+        .log-warn { color: #f59e0b; margin: 4px 0; }
     </style>
 </head>
-<body class="p-6">
+<body>
 
-    <!-- Header Section -->
-    <div class="max-w-6xl mx-auto flex justify-between items-center border-b border-gray-800 pb-4 mb-6">
-        <div>
-            <h1 class="text-3xl font-extrabold tracking-wider text-sky-400">OCEANIC GUARDIAN</h1>
-            <p class="text-xs text-gray-400 tracking-widest mt-1">MESH NETWORK RECONNAISSANCE SYSTEM</p>
+    <div class="header">
+        <div class="title">
+            <h1>OCEANIC GUARDIAN</h1>
+            <p>MESH NETWORK RECONNAISSANCE SYSTEM</p>
         </div>
-        <div>
-            <!-- Naya No-Terminal Connect Button -->
-            <button id="connectBtn" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-2">
-                🔌 Connect ESP32
-            </button>
-        </div>
+        <button class="btn-connect" id="connectBtn">🔌 Connect ESP32</button>
     </div>
 
-    <!-- Vessels Grid -->
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <!-- Vessel 01 -->
-        <div class="glass-card rounded-xl p-6 shadow-xl">
-            <h2 class="text-xl font-bold border-b border-gray-800 pb-2 mb-4 text-gray-200 flex items-center gap-2">🚢 VESSEL 01 STATUS</h2>
-            <div class="space-y-3">
-                <div class="flex justify-between"><span class="text-gray-400">Latitude:</span><span id="v1-lat" class="font-mono font-bold text-sky-300">13.0827 °N</span></div>
-                <div class="flex justify-between"><span class="text-gray-400">Longitude:</span><span id="v1-lon" class="font-mono font-bold text-sky-300">80.2707 °E</span></div>
-                <div class="flex justify-between"><span class="text-gray-400">Water Ingress Status:</span><span id="v1-water" class="font-mono font-bold text-emerald-400">0 (NOMINAL)</span></div>
-                <div class="flex justify-between"><span class="text-gray-400">Tilt Angle:</span><span id="v1-tilt" class="font-mono font-bold text-sky-300">0.0°</span></div>
-                <div class="flex justify-between pt-2 border-t border-gray-800 mt-2"><span class="text-gray-400">System Severity:</span><span id="v1-status" class="font-bold text-emerald-400">SAFE</span></div>
+    <div class="grid">
+        <div class="card">
+            <h2>🚢 VESSEL 01 STATUS</h2>
+            <div class="data-row">
+                <span class="data-label">Latitude:</span>
+                <span class="data-value" id="v1-lat">13.0827 °N</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Longitude:</span>
+                <span class="data-value" id="v1-lon">80.2707 °E</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Water Ingress Status:</span>
+                <span class="data-value" id="v1-water">0 (NOMINAL)</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Tilt Angle:</span>
+                <span class="data-value" id="v1-tilt">0.0°</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">System Severity:</span>
+                <span class="status-badge" id="v1-severity" style="color: #00FF66;">SAFE</span>
             </div>
         </div>
 
-        <!-- Vessel 02 -->
-        <div class="glass-card rounded-xl p-6 shadow-xl">
-            <h2 class="text-xl font-bold border-b border-gray-800 pb-2 mb-4 text-gray-200 flex items-center gap-2">🚢 VESSEL 02 STATUS</h2>
-            <div class="space-y-3">
-                <div class="flex justify-between"><span class="text-gray-400">Latitude:</span><span id="v2-lat" class="font-mono font-bold text-sky-300">13.0911 °N</span></div>
-                <div class="flex justify-between"><span class="text-gray-400">Longitude:</span><span id="v2-lon" class="font-mono font-bold text-sky-300">80.2822 °E</span></div>
-                <div class="flex justify-between"><span class="text-gray-400">Water Ingress Status:</span><span id="v2-water" class="font-mono font-bold text-emerald-400">0 (NOMINAL)</span></div>
-                <div class="flex justify-between"><span class="text-gray-400">Tilt Angle:</span><span id="v2-tilt" class="font-mono font-bold text-sky-300">0.0°</span></div>
-                <div class="flex justify-between pt-2 border-t border-gray-800 mt-2"><span class="text-gray-400">System Severity:</span><span id="v2-status" class="font-bold text-emerald-400">SAFE</span></div>
+        <div class="card">
+            <h2>🚢 VESSEL 02 STATUS (GATEWAY)</h2>
+            <div class="data-row">
+                <span class="data-label">Latitude:</span>
+                <span class="data-value" id="v2-lat">13.0911 °N</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Longitude:</span>
+                <span class="data-value" id="v2-lon">80.2822 °E</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Water Ingress Status:</span>
+                <span class="data-value" id="v2-water">0 (NOMINAL)</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Tilt Angle:</span>
+                <span class="data-value" id="v2-tilt">0.0°</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">System Severity:</span>
+                <span class="status-badge" id="v2-severity" style="color: #00FF66;">SAFE</span>
             </div>
         </div>
     </div>
 
-    <!-- Live Console -->
-    <div class="max-w-6xl mx-auto glass-card rounded-xl p-4 font-mono text-sm shadow-xl">
-        <div id="consoleLog" class="h-28 overflow-y-auto space-y-1 text-emerald-500">
-            <div>[SYSTEM INFO] Web Serial Engine initialized. Ready for hardware link.</div>
-            <div>[SYSTEM INFO] Click "Connect ESP32" up top to bind your USB stream.</div>
-        </div>
+    <div class="console" id="consoleLogs">
+        <div class="log-info">[SYSTEM INFO] Web Serial Engine initialized. Ready for hardware link.</div>
+        <div class="log-info">[SYSTEM INFO] Click "Connect ESP32" up top to bind your USB stream.</div>
     </div>
 
-    <!-- Web Serial API Logic -->
     <script>
         const connectBtn = document.getElementById('connectBtn');
-        const consoleLog = document.getElementById('consoleLog');
+        const consoleLogs = document.getElementById('consoleLogs');
 
-        function appendLog(message, isError = false) {
+        function logToConsole(message, type = 'info') {
             const div = document.createElement('div');
-            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-            if (isError) div.className = "text-rose-400 font-bold";
-            consoleLog.appendChild(div);
-            consoleLog.scrollTop = consoleLog.scrollHeight;
+            div.className = type === 'warn' ? 'log-warn' : 'log-info';
+            div.innerText = `[SYSTEM INFO] ${message}`;
+            consoleLogs.appendChild(div);
+            consoleLogs.scrollTop = consoleLogs.scrollHeight;
         }
 
         connectBtn.addEventListener('click', async () => {
-            if (!('serial' in navigator)) {
-                alert('Bhai, standard Chrome or Edge browser use karo! This features needs Web Serial.');
-                return;
+            if ('serial' in navigator) {
+                try {
+                    const port = await navigator.serial.requestPort();
+                    await port.open({ baudRate: 9600 });
+                    logToConsole("Hardware serial link established on selected port!", "info");
+                    
+                    const textDecoder = new TextDecoderStream();
+                    const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
+                    const reader = textDecoder.readable.getReader();
+                    
+                    readSerialStream(reader);
+                } catch (err) {
+                    logToConsole(`Connection rejected: ${err.message}`, "warn");
+                }
+            } else {
+                alert("Web Serial API not supported by this browser. Use Chrome or Edge!");
             }
+        });
 
-            try {
-                // Open Browser USB Selector
-                const port = await navigator.serial.requestPort();
-                await port.open({ baudRate: 115200 }); // Matches your ESP32 Serial.begin(115200)
-                
-                connectBtn.textContent = "⚡ Connected";
-                connectBtn.className = "bg-emerald-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg flex items-center gap-2 pointer-events-none";
-                appendLog("SUCCESS: ESP32 Hardware stream established over USB!");
-
-                // Read Stream
-                const decoder = new TextDecoderStream();
-                const inputDone = port.readable.pipeTo(decoder.writable);
-                const reader = decoder.readable.getReader();
-
-                let buffer = "";
-
-                while (true) {
-                    const { value, done } = await reader.read();
-                    if (done) {
-                        reader.releaseLock();
-                        break;
-                    }
-                    if (value) {
-                        buffer += value;
-                        let lines = buffer.split("\n");
-                        buffer = lines.pop(); // Keep incomplete line in buffer
-
-                        for (let line of lines) {
-                            line = line.trim();
-                            if (!line) continue;
-                            
-                            appendLog(`Data Rx: ${line}`);
-
+        async function readSerialStream(reader) {
+            let partialBuffer = "";
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) { reader.releaseLock(); break; }
+                if (value) {
+                    partialBuffer += value;
+                    let lines = partialBuffer.split("\n");
+                    partialBuffer = lines.pop();
+                    
+                    for (let line of lines) {
+                        line = line.trim();
+                        if (line.startsWith("{") && line.endsWith("}")) {
                             try {
-                                // Expected JSON string format from ESP32: 
-                                // {"vessel":1, "lat":13.0827, "lon":80.2707, "water":0, "tilt":1.2}
                                 const data = JSON.parse(line);
-                                const v = data.vessel;
-
-                                if (v === 1 || v === 2) {
-                                    document.getElementById(`v${v}-lat`).textContent = `${data.lat} °N`;
-                                    document.getElementById(`v${v}-lon`).textContent = `${data.lon} °E`;
-                                    
-                                    const waterEl = document.getElementById(`v${v}-water`);
-                                    waterEl.textContent = data.water > 0 ? `${data.water} (ALERT)` : "0 (NOMINAL)";
-                                    waterEl.className = data.water > 0 ? "font-mono font-bold text-rose-400" : "font-mono font-bold text-emerald-400";
-
-                                    document.getElementById(`v${v}-tilt`).textContent = `${data.tilt}°`;
-
-                                    const statusEl = document.getElementById(`v${v}-status`);
-                                    if (data.water > 0 || Math.abs(data.tilt) > 15) {
-                                        statusEl.textContent = "DANGER";
-                                        statusEl.className = "font-bold text-rose-500 animate-pulse";
-                                    } else {
-                                        statusEl.textContent = "SAFE";
-                                        statusEl.className = "font-bold text-emerald-400";
-                                    }
-                                }
+                                updateDashboardUI(data);
                             } catch (e) {
-                                // Skip non-JSON strings (like debug logs) safely
+                                // Ignore malformed frames safely
                             }
                         }
                     }
                 }
-
-            } catch (error) {
-                appendLog(`CONNECTION ERROR: ${error.message}`, true);
             }
-        });
+        }
+
+        function updateDashboardUI(data) {
+            // Update Vessel 2 (telemetry node)
+            if (data.telemetry) {
+                document.getElementById('v2-water').innerText = `${data.telemetry.water} (${data.telemetry.water > 200 ? 'HAZARD' : 'NOMINAL'})`;
+                document.getElementById('v2-tilt').innerText = `${data.telemetry.tilt}°`;
+                const v2Sev = document.getElementById('v2-severity');
+                v2Sev.innerText = data.telemetry.severity;
+                applyColor(v2Sev, data.telemetry.severity);
+            }
+            // Update Vessel 1 node
+            if (data.vessel1) {
+                document.getElementById('v1-water').innerText = `${data.vessel1.water} (${data.vessel1.water > 200 ? 'HAZARD' : 'NOMINAL'})`;
+                document.getElementById('v1-tilt').innerText = `${data.vessel1.tilt}°`;
+                const v1Sev = document.getElementById('v1-severity');
+                v1Sev.innerText = data.vessel1.severity;
+                applyColor(v1Sev, data.vessel1.severity);
+            }
+        }
+
+        function applyColor(element, severity) {
+            if (severity === "EMERGENCY") element.style.color = "#FF3333";
+            else if (severity === "WARNING") element.style.color = "#FFA500";
+            else if (severity === "PRE-DISTRESS") element.style.color = "#FFFF00";
+            else element.style.color = "#00FF66";
+        }
     </script>
 </body>
 </html>
