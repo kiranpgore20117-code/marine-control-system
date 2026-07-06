@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OCEANIC GUARDIAN — RECON CONSOLE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --bg-deep: #060a13;
-            --panel-glass: rgba(10, 18, 36, 0.65);
-            --card-glass: rgba(13, 24, 48, 0.45);
-            --neon-cyan: #0ea5e9;
-            --neon-emerald: #10b981;
-            --neon-rose: #f43f5e;
-            --neon-amber: #f59e0b;
+            --bg-deep: #02050d;
+            --panel-glass: rgba(6, 11, 25, 0.7);
+            --card-glass: rgba(10, 19, 39, 0.5);
+            --neon-cyan: #22d3ee;       /* Ice Cyan */
+            --neon-emerald: #34d399;    /* Crisp Emerald */
+            --neon-rose: #f43f5e;       /* Warning Alert Rose */
+            --neon-amber: #fbbf24;      /* Cyber Amber */
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #475569;
@@ -21,7 +25,7 @@
         body {
             background-color: var(--bg-deep);
             color: var(--text-primary);
-            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
             margin: 0; padding: 0;
             min-height: 100vh;
             display: flex;
@@ -29,7 +33,6 @@
             align-items: center;
             overflow: hidden;
             position: relative;
-            letter-spacing: -0.01em;
         }
 
         /* 🌊 High-Definition Kinetic Wave Layer */
@@ -39,7 +42,7 @@
             width: 100%; height: 100%;
             z-index: 1;
             pointer-events: none;
-            opacity: 0.85;
+            opacity: 0.9;
         }
 
         .app-node-layer {
@@ -52,10 +55,10 @@
             box-sizing: border-box;
         }
 
-        /* 🔒 AUTH SECTION (Enterprise Grade Clean Look) */
+        /* 🔒 AUTH SECTION */
         .auth-container {
             background: var(--panel-glass);
-            border: 1px solid rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(34, 211, 238, 0.15);
             backdrop-filter: blur(30px);
             border-radius: 24px;
             padding: 50px 40px;
@@ -66,36 +69,38 @@
         }
 
         .nautical-radar-logo {
-            width: 46px; height: 46px;
-            border: 1.5px solid rgba(14, 165, 233, 0.4);
-            border-radius: 50%; display: inline-flex;
+            width: 48px; height: 48px;
+            border: 1.5px solid rgba(34, 211, 238, 0.3);
+            border-radius: 12px; display: inline-flex;
             justify-content: center; align-items: center;
-            background: rgba(14, 165, 233, 0.05);
+            background: rgba(34, 211, 238, 0.05);
             font-size: 18px; color: var(--neon-cyan); margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(14, 165, 233, 0.1);
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.1);
         }
 
-        .auth-header h1 { font-size: 22px; font-weight: 700; letter-spacing: 1px; margin: 0 0 8px 0; color: #fff; }
-        .auth-header p { color: var(--text-secondary); font-size: 12px; margin-bottom: 35px; }
+        .auth-header h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin: 0 0 8px 0; color: #fff; }
+        .auth-header p { color: var(--text-secondary); font-size: 13px; margin-bottom: 35px; }
         .auth-field { text-align: left; margin-bottom: 22px; }
-        .auth-field label { display: block; font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .auth-field label { display: block; font-size: 11px; font-weight: 500; color: var(--neon-cyan); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
         
         .auth-field input {
-            width: 100%; padding: 14px 16px; background: rgba(5, 9, 19, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; color: white; font-size: 14px; box-sizing: border-box;
+            width: 100%; padding: 14px 16px; background: rgba(2, 4, 10, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; color: white; 
+            font-family: 'JetBrains Mono', monospace; font-size: 14px; box-sizing: border-box;
             transition: all 0.25s ease;
         }
         .auth-field input:focus {
-            outline: none; border-color: var(--neon-cyan); background: rgba(5, 9, 19, 0.8);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+            outline: none; border-color: var(--neon-cyan); background: rgba(2, 4, 10, 0.9);
+            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
         }
 
         .auth-trigger-btn {
             width: 100%; padding: 14px; background: var(--neon-cyan);
-            border: none; border-radius: 10px; color: #040814; font-weight: 600; font-size: 14px; cursor: pointer;
+            border: none; border-radius: 10px; color: #02050d; font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700; font-size: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
             transition: all 0.2s ease; margin-top: 10px;
         }
-        .auth-trigger-btn:hover { background: #38bdf8; transform: translateY(-1px); }
+        .auth-trigger-btn:hover { background: #67e8f9; transform: translateY(-1px); }
 
         /* 🚢 COMMAND OVERLAY BOARD */
         .command-wrapper {
@@ -106,19 +111,19 @@
 
         .panel-header {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 35px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 20px;
+            margin-bottom: 35px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px;
         }
 
         .header-brand-block { display: flex; align-items: center; gap: 16px; }
-        .panel-headline h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin: 0; color: #fff; }
-        .panel-headline p { color: var(--neon-cyan); margin: 4px 0 0 0; font-size: 10px; letter-spacing: 2px; font-weight: 600; text-transform: uppercase; }
+        .panel-headline h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; margin: 0; color: #fff; }
+        .panel-headline p { color: var(--neon-cyan); margin: 4px 0 0 0; font-size: 11px; letter-spacing: 2px; font-weight: 500; text-transform: uppercase; }
         
         .active-session-badge {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
-            color: var(--text-secondary); padding: 8px 16px; border-radius: 40px; font-size: 11px; font-weight: 500; font-family: monospace;
+            background: rgba(34, 211, 238, 0.03); border: 1px solid rgba(34, 211, 238, 0.15);
+            color: var(--neon-cyan); padding: 8px 16px; border-radius: 8px; font-size: 11px; font-weight: 600; font-family: 'JetBrains Mono', monospace;
         }
 
-        /* 📊 PROFESSIONAL NARROW CARD MATRIX */
+        /* 📊 CARD GRID MATRIX */
         .grid-workspace {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -130,64 +135,64 @@
             border-radius: 24px;
             padding: 32px;
             position: relative;
-            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.03);
             border: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
             gap: 24px;
             backdrop-filter: blur(20px);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .card-meta-row { display: flex; justify-content: space-between; align-items: center; }
         .card-title-group { display: flex; align-items: center; gap: 14px; }
         
         .vessel-badge-icon {
-            width: 32px; height: 32px; border-radius: 8px;
+            width: 32px; height: 32px; border-radius: 6px;
             display: flex; justify-content: center; align-items: center;
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
-            color: var(--text-secondary); font-weight: 600; font-size: 12px; font-family: monospace;
+            background: rgba(34, 211, 238, 0.05); border: 1px solid rgba(34, 211, 238, 0.2);
+            color: var(--neon-cyan); font-weight: 600; font-size: 12px; font-family: 'JetBrains Mono', monospace;
         }
 
-        .card-title-group h2 { font-size: 18px; font-weight: 600; margin: 0; color: #f1f5f9; letter-spacing: -0.2px; }
+        .card-title-group h2 { font-size: 20px; font-weight: 500; margin: 0; color: #f1f5f9; letter-spacing: -0.2px; }
 
         .telemetry-metrics-subgrid { display: flex; flex-direction: column; gap: 12px; }
 
         .data-telemetry-slot {
-            background: rgba(5, 9, 22, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.02);
+            background: rgba(2, 5, 12, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.03);
             border-radius: 14px; padding: 14px 20px;
             display: flex; justify-content: space-between; align-items: center;
-            transition: background 0.3s ease;
+            transition: all 0.2s ease;
         }
-        .data-telemetry-slot:hover { background: rgba(5, 9, 22, 0.6); }
+        .data-telemetry-slot:hover { background: rgba(2, 5, 12, 0.7); border-color: rgba(34, 211, 238, 0.15); }
 
         .slot-left { display: flex; flex-direction: column; }
-        .slot-meta { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; font-weight: 500; }
-        .slot-reading { font-size: 15px; font-weight: 600; color: #fff; font-family: monospace; }
-        .slot-icon { font-size: 15px; color: var(--text-muted); transition: color 0.3s ease; }
+        .slot-meta { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .slot-reading { font-size: 16px; font-weight: 600; color: #fff; font-family: 'JetBrains Mono', monospace; }
+        .slot-icon { font-size: 15px; color: var(--text-muted); transition: color 0.2s ease; }
         .data-telemetry-slot:hover .slot-icon { color: var(--neon-cyan); }
 
         .criticality-assessment-banner {
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.25);
             border: 1px solid rgba(255, 255, 255, 0.03);
             padding: 14px 20px; border-radius: 14px;
             display: flex; justify-content: space-between; align-items: center;
             font-size: 13px; margin-top: 4px;
         }
-        .assessment-label { color: var(--text-secondary); font-weight: 500; }
-        .severity-stamp { font-weight: 600; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; font-family: monospace; }
+        .assessment-label { color: var(--text-secondary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; font-size: 11px; }
+        .severity-stamp { font-weight: 700; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
 
         /* 💻 LOG WINDOW TERMINAL */
         .terminal-log-deck {
-            background: rgba(5, 9, 20, 0.75);
+            background: rgba(2, 4, 10, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(10px);
             border-radius: 16px; padding: 16px 24px;
-            font-family: monospace; font-size: 12px;
-            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
+            font-family: 'JetBrains Mono', monospace; font-size: 12px;
+            box-shadow: 0 20px 40px -15 rgba(0,0,0,0.5);
         }
-        .terminal-stream-node { color: var(--neon-emerald); opacity: 0.85; line-height: 1.6; }
+        .terminal-stream-node { color: var(--neon-emerald); opacity: 0.9; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -215,7 +220,7 @@
         <div class="command-wrapper" id="panel-dashboard-view">
             <div class="panel-header">
                 <div class="header-brand-block">
-                    <div class="nautical-radar-logo" style="margin-bottom:0; width:36px; height:36px; font-size:16px;">⚓</div>
+                    <div class="nautical-radar-logo" style="margin-bottom:0; width:36px; height:36px; font-size:16px; border-radius: 8px;">⚓</div>
                     <div class="panel-headline">
                         <h1>Oceanic Guardian</h1>
                         <p>Mesh Network Reconnaissance System</p>
@@ -316,18 +321,14 @@
             const w = window.innerWidth;
             const h = window.innerHeight;
             ctx.clearRect(0, 0, w, h);
-            count += 0.004; // Premium ultra-slow professional movement
+            count += 0.005; 
 
-            // 16 Overlapping structural curves for high depth
-            for (let i = 0; i < 16; i++) {
+            for (let i = 0; i < 15; i++) {
                 ctx.beginPath();
-                ctx.lineWidth = i % 4 === 0 ? 1.4 : 0.7;
-                
-                // Cyan gradient flow with professional opacity matrix
-                ctx.strokeStyle = `rgba(14, 165, 233, ${0.08 + (i * 0.012)})`;
+                ctx.lineWidth = i % 4 === 0 ? 1.6 : 0.8;
+                ctx.strokeStyle = `rgba(34, 211, 238, ${0.1 + (i * 0.012)})`;
 
                 for (let x = 0; x <= w; x += 12) {
-                    // Sophisticated multi-octave wave equation for natural flow
                     const dynamicY = (h * 0.58) - (x * 0.22) + 
                                      Math.sin(x * 0.003 + count + i * 0.3) * 60 + 
                                      Math.cos(x * 0.001 - count + i * 0.15) * 35;
@@ -380,7 +381,7 @@
                     logTerminal.innerHTML = `[${new Date().toLocaleTimeString()}] Feeds synchronization active. System operating within baseline margins.`;
                 }
             } catch (err) {
-                logTerminal.innerHTML = `[CRITICAL] Data ledger socket dropped. Attempting automated handshake reconnect...`;
+                logTerminal.innerHTML = `[CRITICAL] Data ledger socket dropped. Handshaking reconnect...`;
             }
         }
 
@@ -411,7 +412,7 @@
                 card.style.boxShadow = `0 30px 60px -20px ${targetColor}15, inset 0 1px 0 rgba(255,255,255,0.05)`;
             } else {
                 card.style.borderColor = "rgba(255, 255, 255, 0.05)";
-                card.style.boxShadow = "0 30px 60px -20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05)";
+                card.style.boxShadow = "0 30px 60px -20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.03)";
             }
         }
     </script>
