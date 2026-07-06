@@ -34,6 +34,51 @@
                 radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.05) 0px, transparent 50%);
         }
 
+        /* ------------------ ⚓ CYBER GLYPH LOGO ANIMATION ------------------ */
+        .cyber-logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .nautical-radar-logo {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--neon-cyan);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+        }
+
+        .nautical-radar-logo::before {
+            content: '⚓';
+            font-size: 24px;
+            color: #ffffff;
+            text-shadow: 0 0 10px var(--neon-cyan);
+            z-index: 2;
+        }
+
+        /* Radar sweep laser effect */
+        .nautical-radar-logo::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 1px solid transparent;
+            border-top-color: var(--neon-cyan);
+            animation: radar-sweep 2s linear infinite;
+        }
+
+        @keyframes radar-sweep {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         /* ------------------ 🔒 SECURITY ACCREDITATION WALL ------------------ */
         .auth-container {
             background: var(--panel-glass);
@@ -150,6 +195,12 @@
             margin-bottom: 35px;
         }
 
+        .header-brand-block {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .panel-headline h1 {
             font-size: 30px;
             font-weight: 900;
@@ -264,6 +315,9 @@
             margin: 0;
             letter-spacing: 1px;
             color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .signal-indicator {
@@ -380,7 +434,13 @@
 </head>
 <body>
 
+    <!-- 🔒 ACCREDITATION LOG IN PANEL -->
     <div class="auth-container" id="panel-auth-view">
+        <!-- 📡 LIVE ANIMATED NAVAL LOGO -->
+        <div class="cyber-logo-container">
+            <div class="nautical-radar-logo"></div>
+        </div>
+        
         <div class="auth-header">
             <h1>OCEANIC GUARDIAN</h1>
             <p>Defense Operations Control Terminal</p>
@@ -388,22 +448,27 @@
         
         <div class="auth-field">
             <label>Operator Signature (Email)</label>
-            <input type="email" id="operator-email" placeholder="Any email address...">
+            <input type="email" id="operator-email" placeholder="Enter any workstation email...">
         </div>
         
         <div class="auth-field">
             <label>Security Cryptokey (Password)</label>
-            <input type="password" id="operator-key" placeholder="Any password...">
+            <input type="password" id="operator-key" placeholder="Enter session password...">
         </div>
         
         <button class="auth-trigger-btn" onclick="authorizeOperatorSession()">Initialize Terminal</button>
     </div>
 
+    <!-- 🚢 CORE LIVE MISSION DASHBOARD PANEL -->
     <div class="command-wrapper" id="panel-dashboard-view">
         <div class="panel-header">
-            <div class="panel-headline">
-                <h1>OCEANIC GUARDIAN</h1>
-                <p>TACTICAL MESH NETWORK RECONNAISSANCE CONSOLE</p>
+            <div class="header-brand-block">
+                <!-- 📡 RADAR SWEPER LOGO INTEGRATION ON ACTIVE ROOM -->
+                <div class="nautical-radar-logo" style="width:42px; height:42px; transform: scale(0.85);"></div>
+                <div class="panel-headline">
+                    <h1>OCEANIC GUARDIAN</h1>
+                    <p>TACTICAL MESH NETWORK RECONNAISSANCE CONSOLE</p>
+                </div>
             </div>
             <div class="operator-tag-deck">
                 <div class="active-session-badge" id="operator-session-name">OPERATOR: SECURE</div>
@@ -412,6 +477,7 @@
         </div>
 
         <div class="grid-workspace">
+            <!-- VESSEL 01 CONTROL MODULE -->
             <div class="cyber-card" id="v1-hull-card">
                 <div class="card-meta-row">
                     <h2>🚢 VESSEL RESOURCE 01</h2>
@@ -441,6 +507,7 @@
                 </div>
             </div>
 
+            <!-- VESSEL 02 CONTROL MODULE (GATEWAY) -->
             <div class="cyber-card" id="v2-hull-card">
                 <div class="card-meta-row">
                     <h2>🚢 VESSEL RESOURCE 02 (GATEWAY)</h2>
@@ -471,6 +538,7 @@
             </div>
         </div>
 
+        <!-- LOG FEED TRANSCEIVER LAYER -->
         <div class="terminal-log-deck">
             <div class="terminal-banner-meta">
                 <div class="terminal-pulse-emitter"></div>
@@ -487,7 +555,6 @@
         const dashboardView = document.getElementById('panel-dashboard-view');
         const logTerminal = document.getElementById('terminal-stream-node');
 
-        // Volatile Session Verification Check on page reloads
         if (sessionStorage.getItem("operator_authorized") === "true") {
             mountControlTerminal(sessionStorage.getItem("operator_identity"));
         }
@@ -496,7 +563,6 @@
             const email = document.getElementById('operator-email').value.trim();
             const key = document.getElementById('operator-key').value.trim();
 
-            // 🌟 AB KOI BHI EMAIL AUR PASSWORD DAKE DASHBOARD KHOL SAKTA HAI!
             if (email.length > 3 && key.length > 3) {
                 sessionStorage.setItem("operator_authorized", "true");
                 sessionStorage.setItem("operator_identity", email.toUpperCase());
@@ -512,7 +578,6 @@
             document.body.style.alignItems = "flex-start";
             document.getElementById('operator-session-name').innerText = `OPERATOR: ${identity}`;
             
-            // Trigger loop integrations
             setInterval(syncCloudLedgerArray, 1000);
             syncCloudLedgerArray();
         }
@@ -531,7 +596,6 @@
                     if (ledger["1"]) renderNodeTelemetryData("1", ledger["1"]);
                     if (ledger["2"]) renderNodeTelemetryData("2", ledger["2"]);
 
-                    // Timestamp updates
                     const time = new Date().toLocaleTimeString();
                     logTerminal.innerHTML = `[${time}] Dynamic Sync Handshake: 0 packet dropped. Link integrity stable.`;
                     logTerminal.style.color = "var(--neon-emerald)";
