@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oceanic Guardian - Control Room</title>
+    <title>Oceanic Guardian - Cloud Control Room</title>
     <style>
         body {
             background-color: #0b111e;
@@ -13,9 +13,6 @@
             padding: 20px;
         }
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             border-bottom: 1px solid #1e293b;
             padding-bottom: 20px;
             margin-bottom: 30px;
@@ -31,19 +28,6 @@
             margin: 5px 0 0 0;
             font-size: 12px;
         }
-        .btn-connect {
-            background-color: #0284c7;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .btn-connect:hover { background-color: #0369a1; }
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -82,11 +66,10 @@
             padding: 15px;
             font-family: monospace;
             font-size: 13px;
-            height: 120px;
+            height: 100px;
             overflow-y: auto;
         }
-        .log-info { color: #10b981; margin: 4px 0; }
-        .log-warn { color: #f59e0b; margin: 4px 0; }
+        .log-info { color: #10b981; }
     </style>
 </head>
 <body>
@@ -94,9 +77,8 @@
     <div class="header">
         <div class="title">
             <h1>OCEANIC GUARDIAN</h1>
-            <p>MESH NETWORK RECONNAISSANCE SYSTEM</p>
+            <p>MESH NETWORK RECONNAISSANCE SYSTEM (CLOUD INTEGRATION)</p>
         </div>
-        <button class="btn-connect" id="connectBtn">🔌 Connect ESP32</button>
     </div>
 
     <div class="grid">
@@ -149,70 +131,36 @@
         </div>
     </div>
 
-    <div class="console" id="consoleLogs">
-        <div class="log-info">[SYSTEM INFO] Web Serial Engine initialized. Ready for hardware link.</div>
-        <div class="log-info">[SYSTEM INFO] Click "Connect ESP32" up top to bind your USB stream.</div>
+    <div class="console">
+        <div class="log-info" id="ws-status">[SYSTEM INFO] Initializing real-time cloud sync stream...</div>
     </div>
 
     <script>
-        const connectBtn = document.getElementById('connectBtn');
-        const consoleLogs = document.getElementById('consoleLogs');
+        // Automatic WebSocket initialization linking straight to server node streams
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const socket = new WebSocket(`${wsProtocol}${window.location.host}`);
+        const wsStatus = document.getElementById('ws-status');
 
-        function logToConsole(message, type = 'info') {
-            const div = document.createElement('div');
-            div.className = type === 'warn' ? 'log-warn' : 'log-info';
-            div.innerText = `[SYSTEM INFO] ${message}`;
-            consoleLogs.appendChild(div);
-            consoleLogs.scrollTop = consoleLogs.scrollHeight;
-        }
+        socket.onopen = () => {
+            wsStatus.innerText = "[SYSTEM INFO] Cloud Link Active. Live telemetry running automatically.";
+            wsStatus.style.color = "#10b981";
+        };
 
-        connectBtn.addEventListener('click', async () => {
-            if ('serial' in navigator) {
-                try {
-                    const port = await navigator.serial.requestPort();
-                    await port.open({ baudRate: 9600 });
-                    logToConsole("Hardware serial link established on selected port!", "info");
-                    
-                    const textDecoder = new TextDecoderStream();
-                    const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
-                    const reader = textDecoder.readable.getReader();
-                    
-                    readSerialStream(reader);
-                } catch (err) {
-                    logToConsole(`Connection rejected: ${err.message}`, "warn");
-                }
-            } else {
-                alert("Web Serial API not supported by this browser. Use Chrome or Edge!");
+        socket.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                updateDashboardUI(data);
+            } catch (e) {
+                console.error("Decoding packet error:", e);
             }
-        });
+        };
 
-        async function readSerialStream(reader) {
-            let partialBuffer = "";
-            while (true) {
-                const { value, done } = await reader.read();
-                if (done) { reader.releaseLock(); break; }
-                if (value) {
-                    partialBuffer += value;
-                    let lines = partialBuffer.split("\n");
-                    partialBuffer = lines.pop();
-                    
-                    for (let line of lines) {
-                        line = line.trim();
-                        if (line.startsWith("{") && line.endsWith("}")) {
-                            try {
-                                const data = JSON.parse(line);
-                                updateDashboardUI(data);
-                            } catch (e) {
-                                // Ignore malformed frames safely
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        socket.onclose = () => {
+            wsStatus.innerText = "[SYSTEM INFO] Reconnecting to cloud platform sync...";
+            wsStatus.style.color = "#ef4444";
+        };
 
         function updateDashboardUI(data) {
-            // Update Vessel 2 (telemetry node)
             if (data.telemetry) {
                 document.getElementById('v2-water').innerText = `${data.telemetry.water} (${data.telemetry.water > 200 ? 'HAZARD' : 'NOMINAL'})`;
                 document.getElementById('v2-tilt').innerText = `${data.telemetry.tilt}°`;
@@ -220,7 +168,6 @@
                 v2Sev.innerText = data.telemetry.severity;
                 applyColor(v2Sev, data.telemetry.severity);
             }
-            // Update Vessel 1 node
             if (data.vessel1) {
                 document.getElementById('v1-water').innerText = `${data.vessel1.water} (${data.vessel1.water > 200 ? 'HAZARD' : 'NOMINAL'})`;
                 document.getElementById('v1-tilt').innerText = `${data.vessel1.tilt}°`;
