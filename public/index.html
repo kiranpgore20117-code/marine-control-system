@@ -115,7 +115,6 @@
             color: var(--neon-cyan); padding: 6px 14px; border-radius: 8px; font-size: 11px; font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Split Grid Layout */
         .split-dashboard-grid {
             display: grid;
             grid-template-columns: 480px 1fr;
@@ -156,7 +155,6 @@
             border-radius: 10px; padding: 10px 14px;
             display: flex; justify-content: space-between; align-items: center;
         }
-        /* Status, SOS, Severity slots layout */
         .wide-slot { grid-column: span 2; }
 
         .slot-left { display: flex; flex-direction: column; }
@@ -206,7 +204,7 @@
             </div>
             <div class="auth-field">
                 <label>Operator Signature</label>
-                <input type="email" id="operator-email" placeholder="name@domain.com" value="captain@guardian.io">
+                <input type="email" id="operator-email" placeholder="name@domain.com" value="kiranpgore20117@gmail.com">
             </div>
             <div class="auth-field">
                 <label>Access Credentials</label>
@@ -233,17 +231,17 @@
                     <div class="cyber-card" id="v1-hull-card">
                         <div class="card-title-group">
                             <div class="vessel-badge-icon" id="v1-badge" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">01</div>
-                            <h2>Vessel 01 Tactical Feed</h2>
+                            <h2>Vessel 01 Telemetry</h2>
                         </div>
                         <div class="telemetry-metrics-subgrid">
                             <div class="data-telemetry-slot"><div class="slot-left"><span class="slot-meta">Latitude</span><span class="slot-reading" id="v1-lat-reading">Searching...</span></div><span class="slot-icon">🌐</span></div>
                             <div class="data-telemetry-slot"><div class="slot-left"><span class="slot-meta">Longitude</span><span class="slot-reading" id="v1-lon-reading">Searching...</span></div><span class="slot-icon">🧭</span></div>
-                            <div class="data-telemetry-slot"><div class="slot-left"><span class="slot-meta">Water Ingress</span><span class="slot-reading" id="v1-water-reading">0 pts</span></div><span class="slot-icon">💧</span></div>
+                            <div class="data-telemetry-slot"><div class="slot-left"><span class="slot-meta">Water Ingress Status</span><span class="slot-reading" id="v1-water-reading">0 pts</span></div><span class="slot-icon">💧</span></div>
                             <div class="data-telemetry-slot"><div class="slot-left"><span class="slot-meta">Tilt Angle</span><span class="slot-reading" id="v1-tilt-reading">0.0°</span></div><span class="slot-icon">📐</span></div>
                             <div class="data-telemetry-slot"><div class="slot-left"><span class="slot-meta">System Status</span><span class="slot-reading" id="v1-status-reading" style="color:var(--neon-emerald);">OFFLINE</span></div><span class="slot-icon">⚡</span></div>
                             <div class="data-telemetry-slot"><div class="slot-left"><span class="slot-meta">SOS Alert</span><span class="slot-reading" id="v1-sos-reading">0</span></div><span class="slot-icon">🚨</span></div>
                             <div class="criticality-assessment-banner wide-slot">
-                                <span style="font-size:11px; color:var(--text-secondary);">CRITICALITY LEVEL:</span>
+                                <span style="font-size:11px; color:var(--text-secondary);">SEVERITY STATUS:</span>
                                 <span id="v1-severity-stamp" class="severity-stamp">SAFE</span>
                             </div>
                         </div>
@@ -252,17 +250,17 @@
                     <div class="cyber-card" id="v2-hull-card">
                         <div class="card-title-group">
                             <div class="vessel-badge-icon" id="v2-badge" style="color:var(--neon-emerald); border-color:var(--neon-emerald);">02</div>
-                            <h2>Vessel 02 Tactical Feed</h2>
+                            <h2>Vessel 02 Telemetry</h2>
                         </div>
                         <div class="telemetry-metrics-subgrid">
                             <div class="data-telemetry-slot"><div class="slot-left"><span class="slot-meta">Latitude</span><span class="slot-reading" id="v2-lat-reading">Searching...</span></div><span class="slot-icon">🌐</span></div>
                             <div class="data-telemetry-slot"><div class="slot-left"><span class="slot-meta">Longitude</span><span class="slot-reading" id="v2-lon-reading">Searching...</span></div><span class="slot-icon">🧭</span></div>
-                            <div class="data-telemetry-slot"><div class="slot-left"><span class="slot-meta">Water Ingress</span><span class="slot-reading" id="v2-water-reading">0 pts</span></div><span class="slot-icon">💧</span></div>
+                            <div class="data-telemetry-slot"><div class="slot-left"><span class="slot-meta">Water Ingress Status</span><span class="slot-reading" id="v2-water-reading">0 pts</span></div><span class="slot-icon">💧</span></div>
                             <div class="data-telemetry-slot"><div class="slot-left"><span class="slot-meta">Tilt Angle</span><span class="slot-reading" id="v2-tilt-reading">0.0°</span></div><span class="slot-icon">📐</span></div>
                             <div class="data-telemetry-slot"><div class="slot-left"><span class="slot-meta">System Status</span><span class="slot-reading" id="v2-status-reading" style="color:var(--neon-emerald);">OFFLINE</span></div><span class="slot-icon">⚡</span></div>
                             <div class="data-telemetry-slot"><div class="slot-left"><span class="slot-meta">SOS Alert</span><span class="slot-reading" id="v2-sos-reading">0</span></div><span class="slot-icon">🚨</span></div>
                             <div class="criticality-assessment-banner wide-slot">
-                                <span style="font-size:11px; color:var(--text-secondary);">CRITICALITY LEVEL:</span>
+                                <span style="font-size:11px; color:var(--text-secondary);">SEVERITY STATUS:</span>
                                 <span id="v2-severity-stamp" class="severity-stamp">SAFE</span>
                             </div>
                         </div>
@@ -309,6 +307,7 @@
         const initialLat = 13.0827, initialLon = 80.2707;
 
         function initializeLiveTacticalMap() {
+            if (map) return; // Prevent double initialization
             map = L.map('vesselLiveMap', { zoomControl: false, attributionControl: false }).setView([initialLat, initialLon], 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, className: 'leaflet-tile-layer' }).addTo(map);
 
@@ -331,7 +330,7 @@
         function authorizeOperatorSession() {
             const email = document.getElementById('operator-email').value.trim();
             const key = document.getElementById('operator-key').value.trim();
-            if (email.length > i && key.length > 3) {
+            if (email.length > 3 && key.length > 3) {
                 sessionStorage.setItem("operator_authorized", "true");
                 sessionStorage.setItem("operator_identity", email.toLowerCase());
                 mountControlTerminal(email.toLowerCase());
@@ -345,30 +344,30 @@
             
             initializeLiveTacticalMap();
             
-            // Ultra Fast Pulling Interval (500ms) for high-fidelity live tracking
-            setInterval(syncCloudLedgerArray, 500);
+            setInterval(syncCloudLedgerArray, 1000);
             syncCloudLedgerArray();
         }
 
-        // 📡 REAL-TIME MULTI-PARAM STREAM HANDLING
+        // 📡 REAL-TIME MULTI-PARAM STREAM HANDLING (UPDATED TO MATCH YOUR FLASK BACKEND)
         async function syncCloudLedgerArray() {
             try {
-                const response = await fetch('/stream'); // Deployed Vercel automatically routes inside root domain
+                const response = await fetch('https://cabbie-grumbling-crispy.ngrok-free.dev/stream');
                 if (response.ok) {
                     const ledger = await response.json();
                     
-                    if (ledger["1"]) renderNodeTelemetryData("1", ledger["1"]);
-                    if (ledger["2"]) renderNodeTelemetryData("2", ledger["2"]);
+                    // Fixed: Matching keys with your Python server output ("vessel1" and "vessel2")
+                    if (ledger["vessel1"]) renderNodeTelemetryData("1", ledger["vessel1"]);
+                    if (ledger["vessel2"]) renderNodeTelemetryData("2", ledger["vessel2"]);
                     
-                    // Add hardware live packets stream into terminal layout view
                     const timeStr = new Date().toLocaleTimeString();
-                    deckTerminal.innerHTML = `<div>[${timeStr}] 🟢 GRID SYNC ACTIVE &lt;V1_W: ${ledger["1"]?.telemetry?.water || 0}, V2_W: ${ledger["2"]?.telemetry?.water || 0}&gt;</div>` + deckTerminal.innerHTML;
+                    const v1W = ledger["vessel1"]?.telemetry?.water ?? 0;
+                    const v2W = ledger["vessel2"]?.telemetry?.water ?? 0;
                     
-                    // Limit rows inside logger deck box
+                    deckTerminal.innerHTML = `<div>[${timeStr}] 🟢 GRID SYNC ACTIVE &lt;V1_W: ${v1W}, V2_W: ${v2W}&gt;</div>` + deckTerminal.innerHTML;
                     if (deckTerminal.children.length > 5) { deckTerminal.removeChild(deckTerminal.lastChild); }
                 }
             } catch (err) {
-                deckTerminal.innerHTML = `<div style="color:var(--neon-rose)">[${new Date().toLocaleTimeString()}] ❌ LINK FAILURE: Hardware Pipeline Unresponsive...</div>` + deckTerminal.innerHTML;
+                deckTerminal.innerHTML = `<div style="color:var(--neon-rose)">[${new Date().toLocaleTimeString()}] ❌ LINK FAILURE: Ngrok Pipeline Unresponsive...</div>` + deckTerminal.innerHTML;
             }
         }
 
@@ -380,11 +379,10 @@
             const lon = parseFloat(packet.telemetry.lon);
             const water = parseInt(packet.telemetry.water);
             const tilt = parseFloat(packet.telemetry.tilt);
-            const status = packet.status || "ONLINE";
-            const sos = packet.sos !== undefined ? packet.sos : 0;
-            const severity = packet.severity || "SAFE";
+            const status = packet.status || packet.telemetry.status || "ONLINE";
+            const sos = packet.sos !== undefined ? packet.sos : (packet.telemetry.sos !== undefined ? packet.telemetry.sos : 0);
+            const severity = packet.severity || packet.telemetry.severity || "SAFE";
 
-            // Push strings live into DOM cards text fields
             document.getElementById(`${prefix}lat-reading`).innerText = `${lat.toFixed(5)} °N`;
             document.getElementById(`${prefix}lon-reading`).innerText = `${lon.toFixed(5)} °E`;
             document.getElementById(`${prefix}water-reading`).innerText = `${water} pts`;
@@ -392,20 +390,17 @@
             document.getElementById(`${prefix}status-reading`).innerText = status.toUpperCase();
             document.getElementById(`${prefix}sos-reading`).innerText = sos;
 
-            // Update Leaflet dynamic radar vector marker locations
             if (!isNaN(lat) && !isNaN(lon) && lat !== 0 && lon !== 0) {
                 if (id === "1") markerV1.setLatLng([lat, lon]);
                 if (id === "2") markerV2.setLatLng([lat, lon]);
             }
 
-            // High priority styling based on system distress levels
             const stamp = document.getElementById(`${prefix}severity-stamp`);
             const card = document.getElementById(`${prefix}hull-card`);
             const statusText = document.getElementById(`${prefix}status-reading`);
             
             stamp.innerText = severity.toUpperCase();
             
-            // Dynamic Color State Engine Mapping
             let systemColor = "var(--neon-emerald)";
             if (severity === "EMERGENCY" || sos === 1) { systemColor = "var(--neon-rose)"; }
             else if (severity === "WARNING") { systemColor = "var(--neon-amber)"; }
