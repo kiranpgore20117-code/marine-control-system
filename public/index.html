@@ -307,7 +307,7 @@
         const initialLat = 13.0827, initialLon = 80.2707;
 
         function initializeLiveTacticalMap() {
-            if (map) return; // Prevent double initialization
+            if (map) return; 
             map = L.map('vesselLiveMap', { zoomControl: false, attributionControl: false }).setView([initialLat, initialLon], 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, className: 'leaflet-tile-layer' }).addTo(map);
 
@@ -348,20 +348,25 @@
             syncCloudLedgerArray();
         }
 
-        // 📡 REAL-TIME MULTI-PARAM STREAM HANDLING (UPDATED TO MATCH YOUR FLASK BACKEND)
+        // 📡 REAL-TIME MULTI-PARAM STREAM HANDLING (Ngrok Bypass Integrated)
         async function syncCloudLedgerArray() {
             try {
-                const response = await fetch('https://cabbie-grumbling-crispy.ngrok-free.dev/stream');
+                const response = await fetch('https://cabbie-grumbling-crispy.ngrok-free.dev/stream', {
+                    method: 'GET',
+                    headers: {
+                        'ngrok-skip-browser-warning': 'true' // 🔥 Bypasses Ngrok Warning Page
+                    }
+                });
                 if (response.ok) {
                     const ledger = await response.json();
                     
-                    // Fixed: Matching keys with your Python server output ("vessel1" and "vessel2")
-                    if (ledger["vessel1"]) renderNodeTelemetryData("1", ledger["vessel1"]);
-                    if (ledger["vessel2"]) renderNodeTelemetryData("2", ledger["vessel2"]);
+                    // Matching perfectly with your Python Keys "1" and "2"
+                    if (ledger["1"]) renderNodeTelemetryData("1", ledger["1"]);
+                    if (ledger["2"]) renderNodeTelemetryData("2", ledger["2"]);
                     
                     const timeStr = new Date().toLocaleTimeString();
-                    const v1W = ledger["vessel1"]?.telemetry?.water ?? 0;
-                    const v2W = ledger["vessel2"]?.telemetry?.water ?? 0;
+                    const v1W = ledger["1"]?.telemetry?.water ?? 0;
+                    const v2W = ledger["2"]?.telemetry?.water ?? 0;
                     
                     deckTerminal.innerHTML = `<div>[${timeStr}] 🟢 GRID SYNC ACTIVE &lt;V1_W: ${v1W}, V2_W: ${v2W}&gt;</div>` + deckTerminal.innerHTML;
                     if (deckTerminal.children.length > 5) { deckTerminal.removeChild(deckTerminal.lastChild); }
